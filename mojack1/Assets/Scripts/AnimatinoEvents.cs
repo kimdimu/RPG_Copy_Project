@@ -9,7 +9,7 @@ public class AnimatinoEvents : MonoBehaviour
 
     void SlashaniHitEvent()
     {
-        Debug.Log("she");
+        //Debug.Log("she");
         OnSlashAnimationHit();
     }
 }

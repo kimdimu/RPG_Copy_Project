@@ -30,7 +30,7 @@ public class EnemyController : MonoBehaviour
         anim.SetTrigger("GetHit");
         anim.SetInteger("Condition", 100);
         curHealth -= dmg;
-        Debug.Log(curHealth);
+        //Debug.Log(curHealth);
 
         if(curHealth<=0)
         {
@@ -49,11 +49,11 @@ public class EnemyController : MonoBehaviour
         foreach(GameObject go in players)
         {
             Debug.Log("foreach");
-            go.GetComponent<PlayerController>().GetExp(expGranted / players.Length);
+            go.GetComponent<PlayerController>().SetExp(expGranted / players.Length);
         }
 
         anim.SetTrigger("IsDead");
-        GameObject.Destroy(this.gameObject, 3);
+        Destroy(this.gameObject, 3);
     }
 
     void DropLoot()
