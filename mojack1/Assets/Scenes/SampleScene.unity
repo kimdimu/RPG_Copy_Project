@@ -1576,6 +1576,31 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 5822214590303146396, guid: f87dec2a6f6a8834f9c4523aec7dd6a9,
+        type: 3}
+      propertyPath: expbar
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 5822214590303146396, guid: f87dec2a6f6a8834f9c4523aec7dd6a9,
+        type: 3}
+      propertyPath: atkDamage
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5822214590303146396, guid: f87dec2a6f6a8834f9c4523aec7dd6a9,
+        type: 3}
+      propertyPath: strength
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5822214590303146396, guid: f87dec2a6f6a8834f9c4523aec7dd6a9,
+        type: 3}
+      propertyPath: weaponDmg
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5822214590303146396, guid: f87dec2a6f6a8834f9c4523aec7dd6a9,
+        type: 3}
+      propertyPath: bonusDmg
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 5822214590303146397, guid: f87dec2a6f6a8834f9c4523aec7dd6a9,
         type: 3}
       propertyPath: m_LocalPosition.x
