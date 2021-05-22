@@ -5,9 +5,13 @@ using UnityEngine;
 public class UIController : MonoBehaviour
 {
     public static UIController instance;
-    void Start()
+    void Awake()
     {
-        if (!instance) instance = this;   
+        if (!instance)
+        {
+            Debug.Log("makeUIinstance");
+            instance = this;
+        }
     }
 
 }

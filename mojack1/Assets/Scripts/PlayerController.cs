@@ -7,11 +7,11 @@ public class PlayerController : MonoBehaviour
 {
     public Animator anim;
 
-    [Header("Attribute")]
+    //[Header("Attribute")]
     private int level = 1;
-    private Text levelText;
+    public Text levelText;
     public float Experience { get; private set; } // property. set is private. we can use set only in this class(instance)
-    private Transform expbar;
+    public Transform expbar;
 
     [Header("Health")]
     public float incapacitatedTime; //피격 후 무력화 시간 
@@ -19,25 +19,33 @@ public class PlayerController : MonoBehaviour
     public float totalHealth;
     public float curHealth;
 
-    [Header("Movement")]
-    private bool canMove = true;
-    public float moveSpeed;
-    public float velocity;
-    public Rigidbody rb;
-
     [Header("Combat")]
-    private List<Transform> enemiesInRange = new List<Transform>(); //enemies List in attack range
     public bool isAttack;
     public float atkDamage;
     public float attackSpeed;
+    public float weaponDmg;
+    public float bonusDmg;
+    
+    private List<Transform> enemiesInRange = new List<Transform>(); //enemies List in attack range
+
+    [Header("Movement")]
+    public float moveSpeed;
+    public float velocity;
+    public Rigidbody rb;
+    private bool canMove = true;
+
+    public float strength;// { get; private set; }
+
     void Start()
     {
         dead = false;
         Experience = 0;
-        AnimatinoEvents.OnSlashAnimationHit += DealDamage;
+        AnimationEvents.OnSlashAnimationHit += DealDamage;
         curHealth = totalHealth;
         expbar = UIController.instance.transform.Find("Background/Exp");
         levelText = UIController.instance.transform.Find("Background/LvText").GetComponent<Text>();
+        SetExp(0);
+        SetAttackDmg();
     }
 
     void Update()
@@ -45,6 +53,11 @@ public class PlayerController : MonoBehaviour
         if (incapacitatedTime > 0) return;
         GetInput();
         Move();
+    }
+
+    void SetAttackDmg()
+    {
+        atkDamage = GameLogic.CalculatePlayerBaseAttackDmg(this) + weaponDmg + bonusDmg;
     }
 
     void GetInput()

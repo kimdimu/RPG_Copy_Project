@@ -10,4 +10,11 @@ public class GameLogic : MonoBehaviour
         if (curLv == 0) return 0;
         return (curLv * curLv + curLv + 3) * 3;
     }
+
+    public static float CalculatePlayerBaseAttackDmg(PlayerController pc)
+    {
+        float attackDmg = pc.strength;
+            return attackDmg;
+    }
+
 }
