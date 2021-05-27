@@ -62,12 +62,23 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\AnimationEvents.cs" />
-    <Compile Include="Assets\Scripts\EnemyController.cs" />
-    <Compile Include="Assets\Scripts\FollowTarget.cs" />
-    <Compile Include="Assets\Scripts\GameLogic.cs" />
-    <Compile Include="Assets\Scripts\PlayerController.cs" />
-    <Compile Include="Assets\Scripts\UIController.cs" />
+    <Compile Include="Assets\AShopExport\ShowAnimation.cs" />
+    <Compile Include="Assets\AShopExport\UIObjRotation.cs" />
+    <Compile Include="Assets\Scripts\Camera\FollowTarget.cs" />
+    <Compile Include="Assets\Scripts\Character\EnemyController.cs" />
+    <Compile Include="Assets\Scripts\Character\NPCController.cs" />
+    <Compile Include="Assets\Scripts\Character\PlayerController.cs" />
+    <Compile Include="Assets\Scripts\Database\ItemDatabase.cs" />
+    <Compile Include="Assets\Scripts\Database\MonsterDatabase.cs" />
+    <Compile Include="Assets\Scripts\Database\NPCDatabase.cs" />
+    <Compile Include="Assets\Scripts\Event\AnimationEvents.cs" />
+    <Compile Include="Assets\Scripts\Managers\DialogueManager.cs" />
+    <Compile Include="Assets\Scripts\Managers\GameLogic.cs" />
+    <Compile Include="Assets\Scripts\Managers\InputManager.cs" />
+    <Compile Include="Assets\Scripts\Managers\Quest.cs" />
+    <Compile Include="Assets\Scripts\Managers\QuestManager.cs" />
+    <Compile Include="Assets\Scripts\Managers\UIController.cs" />
+    <None Include="Assets\Resources\Json files\questtext.txt" />
     <Reference Include="UnityEngine">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.4.11f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
     </Reference>

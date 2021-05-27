@@ -1,0 +1,18 @@
+{	"id":0,
+	"questName":"Dimu's first Quest",
+	"description":"Fucking Mummies Make Me Crazy.",
+	"recipent":0,
+	"requiredLevel":0,
+	"reward":
+	{
+		"exp":400.0,
+		"money":0.0,
+		"items":[]
+	},
+	"task":
+	{
+		"talkTo":[],
+		"items":[],
+		"kills":[{"id":0,"amount":10,"playerCurrent":0}]
+	}
+}
