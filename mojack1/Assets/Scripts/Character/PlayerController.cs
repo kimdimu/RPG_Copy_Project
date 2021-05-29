@@ -68,8 +68,8 @@ public class PlayerController : MonoBehaviour
                 NPCController npcController = hit.transform.GetComponent<NPCController>();
                 if (npcController != null)
                 {
-                    npcController.ShowD();
-                    npcController.dialogueIndex++;
+                    npcController.OnClick();
+                    //npcController.dialogueIndex++;
                     return;
                 }
             }

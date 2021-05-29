@@ -71,6 +71,7 @@
     <Compile Include="Assets\Scripts\Database\ItemDatabase.cs" />
     <Compile Include="Assets\Scripts\Database\MonsterDatabase.cs" />
     <Compile Include="Assets\Scripts\Database\NPCDatabase.cs" />
+    <Compile Include="Assets\Scripts\Database\PlayerData.cs" />
     <Compile Include="Assets\Scripts\Event\AnimationEvents.cs" />
     <Compile Include="Assets\Scripts\Managers\DialogueManager.cs" />
     <Compile Include="Assets\Scripts\Managers\GameLogic.cs" />

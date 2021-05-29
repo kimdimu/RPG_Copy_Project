@@ -5,63 +5,45 @@ using UnityEngine.UI;
 
 public class NPCController : MonoBehaviour
 {
-    [SerializeField]
-    string[] dialogues;
+    [SerializeField] int[] quests;
+    [SerializeField] string[] dialogues;
     public int dialogueIndex = 0;
     private Quest quest;
 
     private void Start()
     {
+        foreach(int i in quests)
+        {
+            QuestManager.instance.LoadQuest(i);
+        }
+
         //SetQuestExample();
         //QuestManager.instance.CreateJsonFile(Application.dataPath, "Jsontestfile", JsonUtility.ToJson(quest));
-
-        ShowQuestInfo(QuestManager.instance.questDictionary[0]);
+        //ShowQuestInfo(QuestManager.instance.questDictionary[0]);
         //print(JsonUtility.ToJson(quest));
     }
-
-    void ShowQuestInfo(Quest quest)
+    public void ShowQuestInfo()
     {
-        Transform info = GameObject.Find("Canvas/QuestInfo2/Background/Info/Viewport/Content").transform;
-        info.Find("Name").GetComponent<Text>().text = quest.questName;
-        info.Find("Description").GetComponent<Text>().text = quest.description;
-
-        string taskString = "Task:\n";
-        if(quest.task.kills!=null)
+        foreach(int i in quests)
         {
-            foreach (Quest.QuestKill qk in quest.task.kills)
-            {
-                taskString += "Slay " + qk.amount + " " + MonsterDatabase.monsters[qk.id] + ".\n";
-            }
+            //Did the player finished this quest?
+           // if(!PlayerData.finishedQuests.Contains(i)&&
+                //Do the player meet the requirements? 퀘스트 받을 수 있는 요구조건을 충족했나?
+            //    QuestManager.instance.IsQuestAvailable(i, GameObject.Find("Player").GetComponent<>()))
+            //{
+            //    QuestManager.instance.ShowQuestInfo(QuestManager.instance.questDictionary[]);
+            //    break;
+            //} //함수정의좀알려주라
         }
-        if (quest.task.items != null)
-        {
-            foreach (Quest.QuestItem qi in quest.task.items)
-            {
-                taskString += "Bring " + qi.amount + " " + ItemDatabase.items[qi.id] + ".\n";
-            }
-        }
-        if (quest.task.talkTo != null)
-        {
-            foreach (int id in quest.task.talkTo)
-            {
-                taskString += "Talk to " + NPCDatabase.npcs[id] + ".\n";
-            }
-        }
-
-        info.Find("Task").GetComponent<Text>().text = taskString;
-
-        string rewardString = "Reward:\n";
-        if (quest.reward.items!= null)
-        {
-            foreach (Quest.QuestItem qi in quest.reward.items)
-            {
-                rewardString += qi.amount + " " + ItemDatabase.items[qi.id] + ".\n";
-            }
-        }
-        if (quest.reward.exp > 0) rewardString += quest.reward.exp + " Exp.\n";
-        if (quest.reward.money > 0) rewardString += quest.reward.money + " Money.\n";
-        info.Find("Reward").GetComponent<Text>().text = rewardString;
+        
     }
+
+    public void OnClick()
+    {
+        ShowQuestInfo();
+        dialogueIndex++;
+    }
+  
     public void ShowD()
     {
         if (dialogueIndex > dialogues.Length - 1)
