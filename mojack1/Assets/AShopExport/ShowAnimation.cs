@@ -49,7 +49,7 @@ public class ShowAnimation : MonoBehaviour {
 
 	public GameObject[] Chrs;
 	public int i =0;
-	private int curi =0;
+	//private int curi =0;
 	void ChooseChar ()
 	{
 		CurAinObjCount = i;
@@ -66,8 +66,7 @@ public class ShowAnimation : MonoBehaviour {
 	
 	void AddAnim () 
 	{
-		ain = AinObjs [i].GetComponent<Animation>();
-		clips = AnimationUtility.GetAnimationClips(ain);
+		clips = AnimationUtility.GetAnimationClips(AinObjs[i]);
 	}
 	void PlayAnim ()
 	{

@@ -9,7 +9,7 @@ public class InputManager : MonoBehaviour
     public delegate void InputEvent();
     public static event InputEvent OnPressDown;
     public static event InputEvent OnPressUp;
-    public static event InputEvent OnTap;
+    //public static event InputEvent OnTap;
 
     void Start()
     {

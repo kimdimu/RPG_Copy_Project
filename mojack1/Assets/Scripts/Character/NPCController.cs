@@ -13,25 +13,15 @@ public class NPCController : MonoBehaviour
     private void Start()
     {
         //SetQuestExample();
+        //QuestManager.instance.CreateJsonFile(Application.dataPath, "Jsontestfile", JsonUtility.ToJson(quest));
+
         ShowQuestInfo(QuestManager.instance.questDictionary[0]);
         //print(JsonUtility.ToJson(quest));
     }
-    void SetQuestExample()
-    {
-        quest = new Quest();
-        quest.questName = "Dimu's first Quest";
-        quest.description = "Fucking Mummies Make Me Crazy.";
-        quest.reward = new Quest.Reward();
-        quest.reward.exp = 400;
-        quest.task = new Quest.Task();
-        quest.task.kills = new Quest.QuestKill[1];
-        quest.task.kills[0] = new Quest.QuestKill();
-        quest.task.kills[0].id = 0;
-        quest.task.kills[0].amount = 10;
-    }
+
     void ShowQuestInfo(Quest quest)
     {
-        Transform info = GameObject.Find("Canvas/QuestInfo/Background").transform;
+        Transform info = GameObject.Find("Canvas/QuestInfo2/Background/Info/Viewport/Content").transform;
         info.Find("Name").GetComponent<Text>().text = quest.questName;
         info.Find("Description").GetComponent<Text>().text = quest.description;
 
@@ -83,5 +73,19 @@ public class NPCController : MonoBehaviour
         {
             DialogueManager.instance.PrintOnDialogueBox(name + ": " + dialogues[dialogueIndex]);
         }
+    }
+
+    void SetQuestExample()
+    {
+        quest = new Quest();
+        quest.questName = "Dimu's first Quest";
+        quest.description = "Fucking Mummies Make Me Crazy.";
+        quest.reward = new Quest.Reward();
+        quest.reward.exp = 400;
+        quest.task = new Quest.Task();
+        quest.task.kills = new Quest.QuestKill[1];
+        quest.task.kills[0] = new Quest.QuestKill();
+        quest.task.kills[0].id = 0;
+        quest.task.kills[0].amount = 10;
     }
 }
