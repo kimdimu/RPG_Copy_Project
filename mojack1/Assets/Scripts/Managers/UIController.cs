@@ -21,14 +21,11 @@ public class UIController : MonoBehaviour
         if (!instance) instance = this;
 
         canvas = GameObject.Find("Canvas").transform;
-        questInfo = canvas.Find("QuestInfo");
+        questInfo = canvas.Find("QuestInfo2");
         questInfoContent = questInfo.Find("Background/Info/Viewport/Content");
         questInfoAcceptButton = questInfo.Find("Background/Buttons/Accept").GetComponent<Button>();
         questInfoCancelButton = questInfo.Find("Background/Buttons/Cancel").GetComponent<Button>();
-        questInfoCancelButton.onClick.AddListener(() =>
-        {
-            questInfo.gameObject.SetActive(false);
-        });
+        questInfoCancelButton.onClick.AddListener(() => questInfo.gameObject.SetActive(false));
 
         questGridContent = canvas.Find("QuestGrid/Background/Info/Viewport/Content");
     }

@@ -15,17 +15,11 @@ public class QuestManager : MonoBehaviour
         if (instance == null) instance = this;
     }
 
-    public void CreateJsonFile(string createpath, string filename, string jsondata)
+
+    public void ShowQuestInfoInInfo(Quest quest)
     {
-        Debug.Log("CREATEJSONFILE");
-        FileStream fileStream = new FileStream(string.Format("{0}/Resources/Json files/{1}.json", createpath, filename), FileMode.Create);
-        byte[] data = Encoding.UTF8.GetBytes(jsondata);
-        fileStream.Write(data, 0, data.Length);
-        fileStream.Close();
-        Debug.Log("CREATEJSONFILECLOSE");
-    }
-    public void ShowQuestInfo(Quest quest)
-    {
+        Debug.Log("QM ShowQuestInfo");
+
         //show q info panel
         UIController.instance.questInfo.gameObject.SetActive(true);
         //가져온 퀘를 받아서 진행중이지 않다면? SetActive true 
@@ -40,8 +34,10 @@ public class QuestManager : MonoBehaviour
             //hide q info panel
             UIController.instance.questInfo.gameObject.SetActive(false);
 
-            ShowActiveQuests();
+            ShowActiveQuestsInGrid();
         });
+
+        #region UIText
 
         UIController.instance.questInfoContent.Find("Name").GetComponent<Text>().text = quest.questName;
         UIController.instance.questInfoContent.Find("Description").GetComponent<Text>().text = quest.description;
@@ -82,18 +78,21 @@ public class QuestManager : MonoBehaviour
         if (quest.reward.exp > 0) rewardString += quest.reward.exp + " Exp.\n";
         if (quest.reward.money > 0) rewardString += quest.reward.money + " Money.\n";
         UIController.instance.questInfoContent.Find("Reward").GetComponent<Text>().text = rewardString;
+        #endregion
     }
     public void LoadQuest(int id)
     {
         Quest newQuest =  JsonUtility.FromJson<Quest>(Resources.Load<TextAsset>("Json files/"+ id.ToString("00")).text);
         //파일이름 00 01 . . .
         questDictionary.Add(newQuest.id, newQuest);
+        //Debug.Log(newQuest.id + newQuest.questName + "Load Success");
     }
 
-    public void ShowActiveQuests()
+    public void ShowActiveQuestsInGrid()
     {
         foreach(int i in PlayerData.activeQuests)
         {
+        Debug.Log("ShowActiveQuests");
             //create new Quest Button
             GameObject QuestButtonGo = Instantiate(Resources.Load("Prefabs/Quest_Button_Prefab") as GameObject);
             QuestButtonGo.name = questDictionary[i].id.ToString();
@@ -102,11 +101,23 @@ public class QuestManager : MonoBehaviour
             QuestButtonGo.transform.Find("Text").GetComponent<Text>().text = questDictionary[i].questName;
             int questid = new int();
             questid = i;
-            QuestButtonGo.GetComponent<Button>().onClick.AddListener(() => { ShowQuestInfo(questDictionary[questid]); });
+            QuestButtonGo.GetComponent<Button>().onClick.AddListener(() => { ShowQuestInfoInInfo(questDictionary[questid]); });
         }
     }
-    public bool IsQuestAvailable(int i, GameObject gameObject)
+    public bool IsQuestAvailable(int questId, PlayerController player)
     {
-        return true;
+        Debug.Log(questDictionary[questId].requiredLevel <= player.level);
+
+        return (questDictionary[questId].requiredLevel <= player.level);
+    }
+
+    public void CreateJsonFile(string createpath, string filename, string jsondata)
+    {
+        Debug.Log("CREATEJSONFILE");
+        FileStream fileStream = new FileStream(string.Format("{0}/Resources/Json files/{1}.json", createpath, filename), FileMode.Create);
+        byte[] data = Encoding.UTF8.GetBytes(jsondata);
+        fileStream.Write(data, 0, data.Length);
+        fileStream.Close();
+        Debug.Log("CREATEJSONFILECLOSE");
     }
 }

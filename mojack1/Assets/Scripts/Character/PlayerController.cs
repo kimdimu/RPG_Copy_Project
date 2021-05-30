@@ -8,7 +8,7 @@ public class PlayerController : MonoBehaviour
     public Animator anim;
 
     //[Header("Attribute")]
-    private int level = 1;
+    public int level = 1;
     public Text levelText;
     public float Experience { get; private set; } // property. set is private. we can use set only in this class(instance)
     public Transform expbar;
@@ -221,7 +221,7 @@ public class PlayerController : MonoBehaviour
         }
         expbar.Find("Fill_bar").GetComponent<Image>().fillAmount = (Experience - prevExp) / (expNeeded -prevExp);     
 
-        Debug.Log("expNeeded: "+ expNeeded + "experience: " +Experience);
+        //Debug.Log("expNeeded: "+ expNeeded + "experience: " +Experience);
     }
 
     void LevelUp()

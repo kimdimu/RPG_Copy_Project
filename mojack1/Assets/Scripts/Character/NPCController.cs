@@ -12,9 +12,9 @@ public class NPCController : MonoBehaviour
 
     private void Start()
     {
-        foreach(int i in quests)
+        //foreach(int i in quests)
         {
-            QuestManager.instance.LoadQuest(i);
+            QuestManager.instance.LoadQuest(0);
         }
 
         //SetQuestExample();
@@ -24,28 +24,36 @@ public class NPCController : MonoBehaviour
     }
     public void ShowQuestInfo()
     {
-        foreach(int i in quests)
+        //Debug.Log("NPC ShowQuestInfo");
+        foreach (int i in quests)
         {
+            //Debug.Log("NPC ShowQuestInfo " + i);
             //Did the player finished this quest?
-           // if(!PlayerData.finishedQuests.Contains(i)&&
+            if (!PlayerData.finishedQuests.Contains(i) &&
                 //Do the player meet the requirements? 퀘스트 받을 수 있는 요구조건을 충족했나?
-            //    QuestManager.instance.IsQuestAvailable(i, GameObject.Find("Player").GetComponent<>()))
-            //{
-            //    QuestManager.instance.ShowQuestInfo(QuestManager.instance.questDictionary[]);
-            //    break;
-            //} //함수정의좀알려주라
-        }
-        
+                QuestManager.instance.IsQuestAvailable(i, GameObject.Find("Player").GetComponent<PlayerController>()))
+            {
+                //Show the info of the quest
+                QuestManager.instance.ShowQuestInfoInInfo(QuestManager.instance.questDictionary[quests[i]]);
+
+            }
+            break;
+        } 
     }
 
     public void OnClick()
     {
+                    Debug.Log("Click");
         ShowQuestInfo();
+        ShowD();
+        InputManager.OnPressUp += DialogueManager.instance.CloseDialBoxCallback;
+
         dialogueIndex++;
     }
   
     public void ShowD()
     {
+
         if (dialogueIndex > dialogues.Length - 1)
         {
             DialogueManager.instance.CloseDialBox();
@@ -54,6 +62,7 @@ public class NPCController : MonoBehaviour
         else
         {
             DialogueManager.instance.PrintOnDialogueBox(name + ": " + dialogues[dialogueIndex]);
+            Debug.Log("ShowD");
         }
     }
 

@@ -22,24 +22,20 @@ public class DialogueManager : MonoBehaviour
     {
         AnimationEvents.OnOffMove();
         dialBox.gameObject.SetActive(true);
+        Debug.Log("PrintDB");
         dialText.text = text;
-        InputManager.OnPressUp += CloseDialBoxCallback;
     }
     public void CloseDialBox()
     {
+        Debug.Log("cloasdb");
         dialBox.gameObject.SetActive(false);
         AnimationEvents.OnOffMove();
     }
 
     public void CloseDialBoxCallback()
     {
+        Debug.Log("cloasdbCallback");
         CloseDialBox();
         InputManager.OnPressUp -= CloseDialBoxCallback;
-    }
-
-    void Update()
-    {
-        Debug.Log("DM");
-
     }
 }

@@ -18,7 +18,6 @@ public class InputManager : MonoBehaviour
 
     void Update()
     {
-        Debug.Log("IM");
         if(Input.GetMouseButtonUp(0))
         {
             OnPressUp?.Invoke();

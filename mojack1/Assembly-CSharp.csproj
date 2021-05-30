@@ -79,7 +79,7 @@
     <Compile Include="Assets\Scripts\Managers\Quest.cs" />
     <Compile Include="Assets\Scripts\Managers\QuestManager.cs" />
     <Compile Include="Assets\Scripts\Managers\UIController.cs" />
-    <None Include="Assets\Resources\Json files\questtext.txt" />
+    <None Include="Assets\Resources\Json files\00.txt" />
     <Reference Include="UnityEngine">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.4.11f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
     </Reference>
