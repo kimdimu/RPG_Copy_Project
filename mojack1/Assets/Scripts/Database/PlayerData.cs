@@ -13,4 +13,9 @@ public class PlayerData : MonoBehaviour
         if (activeQuests.Contains(id)) return;
         activeQuests.Add(id);
     }
+
+    public class MonsterKills
+    {
+
+    }
 }
