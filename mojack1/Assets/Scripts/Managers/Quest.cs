@@ -24,20 +24,20 @@ public class Quest
     public class Task
     {
         public int[] talkTo;
-        public QuestItem[] items;
-        public QuestKill[] kills;
+        public QuestItem[] items;//아이템의 종류수
+        public QuestKill[] kills;//몬스터의 종류 수
     }
     [Serializable]
     public class QuestItem
     {
-        public int id;
-        public int amount;
+        public int id;//아이템의 종류
+        public int amount;//아이템의 개수
     }
     [Serializable]
     public class QuestKill
     {
-        public int id;
-        public int amount;
-        public int playerCurrent;
+        public int id;//몬스터의 종류
+        public int amount;//죽일 몬스터의 개체 수
+        public int initialAmount;//??
     }
 }

@@ -7,7 +7,7 @@ public class InputManager : MonoBehaviour
     public static InputManager instance;
 
     public delegate void InputEvent();
-    public static event InputEvent OnPressDown;
+    public static event InputEvent KeyPressDown;
     public static event InputEvent OnPressUp;
     //public static event InputEvent OnTap;
 
@@ -22,9 +22,10 @@ public class InputManager : MonoBehaviour
         {
             OnPressUp?.Invoke();
         }
-        if (Input.GetMouseButtonDown(0))
+        if (Input.anyKeyDown)
         {
-            OnPressDown?.Invoke();
+            KeyPressDown?.Invoke();
+            print("Input Key: " + Input.inputString);
         }
     }
 }

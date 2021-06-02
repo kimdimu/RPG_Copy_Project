@@ -11,23 +11,30 @@ public class UIController : MonoBehaviour
     //Quest Info
     public Transform questInfo;
     public Transform questInfoContent;
+
     public Button questInfoAcceptButton;
     public Button questInfoCancelButton;
-    public Transform questGridContent;
+    public Button questInfoCompleteButton;
 
+    public Transform questBook;
+    public Transform questBookContent;
+    public Button questBookCancelButton;
 
     void Awake()
     {
         if (!instance) instance = this;
-
         canvas = GameObject.Find("Canvas").transform;
+
         questInfo = canvas.Find("QuestInfo2");
         questInfoContent = questInfo.Find("Background/Info/Viewport/Content");
         questInfoAcceptButton = questInfo.Find("Background/Buttons/Accept").GetComponent<Button>();
+        questInfoCompleteButton = questInfo.Find("Background/Buttons/Complete").GetComponent<Button>();
         questInfoCancelButton = questInfo.Find("Background/Buttons/Cancel").GetComponent<Button>();
         questInfoCancelButton.onClick.AddListener(() => questInfo.gameObject.SetActive(false));
 
-        questGridContent = canvas.Find("QuestGrid/Background/Info/Viewport/Content");
+        questBook = canvas.Find("QuestGrid");
+        questBookContent = questBook.Find("Background/Info/Viewport/Content");
+        questBookCancelButton = questBook.Find("Background/Buttons/Cancel").GetComponent<Button>();
     }
 
 }

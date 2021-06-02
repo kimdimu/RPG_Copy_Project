@@ -4,22 +4,54 @@ using UnityEngine;
 
 public class EnemyController : MonoBehaviour
 {
+    [Header("Ani")]
     public Animator anim;
+    public GameObject hitParticle;
+    public float hitParticleTime = 0.2f;
+
+    [Header("Stats")]
+    public int monsterID;
+    Transform targetPlayer;
     public float totalHealth;
     public float curHealth;
     public float expGranted;
-    public float atkDamage;
-    public float atkSpeed;
-    public float moveSpeed;
     bool dead;
 
+    [Header("Movement")]
+    public float moveSpeed;
+    private FollowTarget followTarget;
+
+    [Header("Combat")]
+    public float atkDamage;
+    public float atkSpeed;
+    public float atkRange;
+    public bool atkCoolDown;
+
+    [Header("Animation")]
+    public AnimationEvent animationEvents;
+
     private GameObject[] players;
+
     void Start()
     {
         players = GameObject.FindGameObjectsWithTag("Player");
         curHealth = totalHealth;
-    }
 
+        //followTarget = this.gameObject.AddComponent<FollowTarget>();
+        //followTarget.enabled = false;
+        //followTarget.followTime = 10 / movementSpeed;
+        //followTarget.lookAtTarget = true;
+        //followTarget.StopAtRange = attackRange;
+        //followTarget.axisNulifier = new Vector3(1, 0, 1);
+
+        //StartCoroutine(FindPlayerInRange());
+
+        //animationEvents.OnAnimationAttackEvent += () => targetPlayer.Getcomponent<PlayerController>().GetHit(attackDamage);
+    }
+    void FindPlayerInRange()
+    {
+
+    }
     void Update()
     {
     }
@@ -40,9 +72,18 @@ public class EnemyController : MonoBehaviour
 
         StartCoroutine(RecoverFromHit());
     }
-
+    bool CanAttack()
+    {
+        if (atkCoolDown) return false;
+        return true;
+    }
     void Die()
     {
+        //데이터에 해당 몬스터의 아이디가 없다? 추가.
+        if (!PlayerData.monstersKilled.ContainsKey(monsterID))
+            PlayerData.monstersKilled.Add(monsterID, new PlayerData.MonsterKills());
+        PlayerData.monstersKilled[monsterID].amount+=5; //죽인 양 증가
+
         dead = true;
         DropLoot();
 

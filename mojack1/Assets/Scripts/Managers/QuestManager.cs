@@ -13,6 +13,7 @@ public class QuestManager : MonoBehaviour
     void Awake()
     {
         if (instance == null) instance = this;
+        SetCallbacks();
     }
 
 
@@ -23,7 +24,12 @@ public class QuestManager : MonoBehaviour
         //show q info panel
         UIController.instance.questInfo.gameObject.SetActive(true);
         //가져온 퀘를 받아서 진행중이지 않다면? SetActive true 
-        UIController.instance.questInfoAcceptButton.gameObject.SetActive(!PlayerData.activeQuests.Contains(quest.id));
+        UIController.instance.questInfoAcceptButton.gameObject.SetActive(!PlayerData.activeQuests.ContainsKey(quest.id)
+                                                                        && !PlayerData.finishedQuests.Contains(quest.id));
+
+        //클리어 버튼 숨긴다.
+        UIController.instance.questInfoCompleteButton.gameObject.SetActive(false);
+
         //이전에 추가된 함수 삭제
         UIController.instance.questInfoAcceptButton.onClick.RemoveAllListeners();
         //새 함수 추가
@@ -47,7 +53,11 @@ public class QuestManager : MonoBehaviour
         {
             foreach (Quest.QuestKill qk in quest.task.kills)
             {
-                taskString += "Slay " + qk.amount + " " + MonsterDatabase.monsters[qk.id] + ".\n";
+                int curKills = 0;
+                if (PlayerData.activeQuests.ContainsKey(qk.id))
+                    curKills = PlayerData.monstersKilled[qk.id].amount - PlayerData.activeQuests[quest.id].kills[qk.id].initialAmount;
+
+                taskString += "Slay " + (curKills) + "/" + qk.amount + " " + MonsterDatabase.monsters[qk.id] + ".\n";
             }
         }
         if (quest.task.items != null)
@@ -88,15 +98,37 @@ public class QuestManager : MonoBehaviour
         //Debug.Log(newQuest.id + newQuest.questName + "Load Success");
     }
 
+    void SetCallbacks()
+    {
+        InputManager.KeyPressDown += KeyCallbacks;
+    }
+
+    void KeyCallbacks()
+    {
+        if(Input.inputString=="b")
+        {
+            ToggleQuestBook(!UIController.instance.questBook.gameObject.activeInHierarchy);
+        }
+    }
+
+    void ToggleQuestBook(bool b)
+    {
+        UIController.instance.questBook.gameObject.SetActive(b);
+        if (b) ShowActiveQuestsInGrid();
+    }
+
     public void ShowActiveQuestsInGrid()
     {
-        foreach(int i in PlayerData.activeQuests)
+        foreach(PlayerData.ActiveQuest aq in PlayerData.activeQuests.Values)
         {
+            int i = aq.id;
+            if (UIController.instance.questBookContent.Find(i.ToString()) != null)
+                continue;
         Debug.Log("ShowActiveQuests");
             //create new Quest Button
             GameObject QuestButtonGo = Instantiate(Resources.Load("Prefabs/Quest_Button_Prefab") as GameObject);
             QuestButtonGo.name = questDictionary[i].id.ToString();
-            QuestButtonGo.transform.SetParent(UIController.instance.questGridContent);
+            QuestButtonGo.transform.SetParent(UIController.instance.questBookContent);
             QuestButtonGo.transform.localScale = Vector3.one;
             QuestButtonGo.transform.Find("Text").GetComponent<Text>().text = questDictionary[i].questName;
             int questid = new int();
@@ -106,14 +138,31 @@ public class QuestManager : MonoBehaviour
     }
     public bool IsQuestAvailable(int questId, PlayerController player)
     {
-        Debug.Log(questDictionary[questId].requiredLevel <= player.level);
-
         return (questDictionary[questId].requiredLevel <= player.level);
+    }
+    public bool IsQuestFinished(int questId)
+    {
+        Quest quest = questDictionary[questId];
+
+        //뭔가를 죽여야한다면
+        if(quest.task.kills.Length>0)
+        {
+            foreach(var questKill in quest.task.kills)
+            {
+                if (!PlayerData.monstersKilled.ContainsKey(questKill.id)) return false;
+
+                int curKills = PlayerData.monstersKilled[questKill.id].amount -
+                             PlayerData.activeQuests[quest.id].kills[questKill.id].initialAmount;
+                //지금 잡은거보다 목표가 더 크면
+                if (curKills < questKill.amount) return false;
+            }
+        }
+
+        return true;
     }
 
     public void CreateJsonFile(string createpath, string filename, string jsondata)
     {
-        Debug.Log("CREATEJSONFILE");
         FileStream fileStream = new FileStream(string.Format("{0}/Resources/Json files/{1}.json", createpath, filename), FileMode.Create);
         byte[] data = Encoding.UTF8.GetBytes(jsondata);
         fileStream.Write(data, 0, data.Length);

@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
+    public static PlayerController main;
+
     public Animator anim;
 
     //[Header("Attribute")]
@@ -38,6 +40,8 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
+        if (main == null) main = this;
+
         dead = false;
         Experience = 0;
         AnimationEvents.OnSlashAnimationHit += DealDamage;

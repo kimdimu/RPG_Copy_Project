@@ -36,9 +36,38 @@ public class NPCController : MonoBehaviour
                 //Show the info of the quest
                 QuestManager.instance.ShowQuestInfoInInfo(QuestManager.instance.questDictionary[quests[i]]);
 
+                //퀘스트 다했다면 버튼 on
+                if (QuestManager.instance.IsQuestFinished(i))
+                {
+                    UIController.instance.questInfoCompleteButton.gameObject.SetActive(true);
+                    UIController.instance.questInfoCompleteButton.onClick.AddListener(() =>
+                    {
+                    ReceiveConpleteQuest(QuestManager.instance.questDictionary[quests[i]]);
+                    PlayerData.activeQuests.Remove(i);//활성화에서 빼고
+                    PlayerData.finishedQuests.Add(i); //끝낸 목록에 보낸다.
+                    UIController.instance.questInfoCompleteButton.onClick.RemoveAllListeners();//버튼 이벤트 삭제한다.
+                    UIController.instance.questInfo.gameObject.SetActive(false);//UI 끈다.
+
+                    GameObject QuestButtonGo = UIController.instance.questBookContent.Find(i.ToString()).gameObject;
+                    Destroy(QuestButtonGo);//왜 못없애지 transform을 gameobject로 바꾸니까 없어짐.
+                        //이거 없애면 안되고 완료 탭 만들어서 거기로 옮겨야됨.
+                    });
+                }
             }
-            break;
-        } 
+                break;
+        }
+    }
+    void ReceiveConpleteQuest(Quest quest)
+    {
+        if (quest.reward.exp > 0) PlayerController.main.SetExp(quest.reward.exp);
+        if(quest.reward.items.Length>0)
+        {
+            foreach(var item in quest.reward.items)
+            {
+                print("You get: ("+item.amount+")x"+ItemDatabase.items[item.id]);
+                //인벤토리에 추가.
+            }
+        }
     }
 
     public void OnClick()
@@ -74,9 +103,9 @@ public class NPCController : MonoBehaviour
         quest.reward = new Quest.Reward();
         quest.reward.exp = 400;
         quest.task = new Quest.Task();
-        quest.task.kills = new Quest.QuestKill[1];
+        quest.task.kills = new Quest.QuestKill[1]; //몬스터 종류 1개
         quest.task.kills[0] = new Quest.QuestKill();
-        quest.task.kills[0].id = 0;
-        quest.task.kills[0].amount = 10;
+        quest.task.kills[0].id = 0; //0번 몬스터
+        quest.task.kills[0].amount = 10; // 10번 죽여라
     }
 }
