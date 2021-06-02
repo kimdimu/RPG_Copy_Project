@@ -54,6 +54,6 @@ public class PlayerData : MonoBehaviour
     {
         public int id;
         public string dataTaken;//언제 퀘스트를 받았나?
-        public Quest.QuestKill[] kills;//지금까지 죽인 몬스터 수
+        public Quest.QuestKill[] kills;//죽일 몬스터 종류
     }
 }
