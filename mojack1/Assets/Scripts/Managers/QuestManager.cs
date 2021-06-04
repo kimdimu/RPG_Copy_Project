@@ -54,7 +54,7 @@ public class QuestManager : MonoBehaviour
             foreach (Quest.QuestKill qk in quest.task.kills)
             {
                 int curKills = 0;
-                if (PlayerData.activeQuests.ContainsKey(qk.id))
+                if (PlayerData.activeQuests.ContainsKey(qk.id)&&PlayerData.monstersKilled.ContainsKey(qk.id))
                     curKills = PlayerData.monstersKilled[qk.id].amount - PlayerData.activeQuests[quest.id].kills[qk.id].initialAmount;
 
                 taskString += "Slay " + (curKills) + "/" + qk.amount + " " + MonsterDatabase.monsters[qk.id] + ".\n";
@@ -149,7 +149,7 @@ public class QuestManager : MonoBehaviour
         {
             foreach(var questKill in quest.task.kills)
             {
-                if (!PlayerData.monstersKilled.ContainsKey(questKill.id)) return false;
+                if (!PlayerData.activeQuests.ContainsKey(quest.id)||!PlayerData.monstersKilled.ContainsKey(questKill.id)) return false;
 
                 int curKills = PlayerData.monstersKilled[questKill.id].amount -
                              PlayerData.activeQuests[quest.id].kills[questKill.id].initialAmount;
