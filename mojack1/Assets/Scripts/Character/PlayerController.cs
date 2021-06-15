@@ -60,6 +60,7 @@ public class PlayerController : MonoBehaviour
         if (incapacitatedTime > 0) return;
         GetInput();
         Move();
+        Debug.Log(transform.eulerAngles);
     }
     //-------------------------------------------------------------INPUT
     void GetInput()

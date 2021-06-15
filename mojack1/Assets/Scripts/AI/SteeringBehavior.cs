@@ -19,11 +19,14 @@ public class SteeringBehavior
     GameObject evader; // 적 기체
     Vector3 steeringF; //힘
     Vector3 zero; // 벡터 0,0,0
+    Vector3 target;
 
     float wanderRadius; //원의 반경
     float wanderDist; //원이 투사되는 거리. 원 중심과의 거리.
     float wanderJitter; // 무작위 변위의 최대 크기
     Vector3 wanderTarget; //무작위변위를 더할 벡터
+    float playerAngle;
+    float angleGoal;
 
     float time; //시간
     bool isReady; //공격준비상태인가?
@@ -107,6 +110,8 @@ public class SteeringBehavior
                 }
                 break;
         }
+        //Debug.Log(steeringF);
+
         return steeringF;
     }
 
@@ -170,16 +175,30 @@ public class SteeringBehavior
     }
     Vector3 Wander()
     {
-        wanderTarget = zero;
-        //회전을 시 켜야한다.
-        //소량의 무작위 벡터를 목표물 위치에 더한다.
-        wanderTarget.x += Random.Range(-1f, 1f) * wanderJitter;
-        wanderTarget.z += Random.Range(-1f, 1f) * wanderJitter;
-        wanderTarget.Normalize();
-        //원의 반지름에 맞췄다.
-        wanderTarget *= wanderRadius;
+        time -= Time.deltaTime;
+        if (time < 0f)
+        {
+            Debug.Log("초기화~ 단번에 늒껴");
+
+            wanderTarget = zero; //초기화
+                                 //소량의 무작위 벡터를 목표물 위치에 더한다.
+            wanderTarget.x += Random.Range(-1f, 1f) * wanderJitter;
+            wanderTarget.z += Random.Range(-1f, 1f) * wanderJitter;
+            //정규화 후 원의 반지름에 맞춘다.
+            wanderTarget.Normalize();
+            wanderTarget *= wanderRadius;
+
+            playerAngle = player.transform.eulerAngles.y;
+             // Debug.Log(playerAngle);
+            angleGoal = Mathf.Pow(Random.Range(0.0f, 90f), 2);
+            time = 2;
+        }
+
+        if (Mathf.Pow(player.transform.eulerAngles.y - playerAngle, 2) >= angleGoal)
+        {
+            return zero;
+        }
         
-        Vector3 target;
         //반지름에 맞춘 위치에 현재 보고있는 방향 * 투사 거리만큼 더해준다. + 현재 위치 더해서 월드 좌표로 옮기기
         target.x = wanderTarget.x + player.transform.position.x+ player.transform.forward.x * wanderDist;
         target.y = player.transform.position.y;
@@ -255,7 +274,7 @@ public class SteeringBehavior
             //sforce = Seek(mass);
             mass /= targetsCount;
             Vector3 toTarget = mass - player.transform.position;
-            sforce += toTarget.normalized / (toTarget.magnitude+5);//거리가 길어질수록 힘이 적게 추가됨
+            sforce += toTarget.normalized / (toTarget.magnitude);//거리가 길어질수록 힘이 적게 추가됨
             //sforce = Seek(mass);
         }
 
@@ -271,7 +290,7 @@ public class SteeringBehavior
                 //타겟(다른놈)이 플레이어에게 가는 방향. 즉 도망침
                 Vector3 toPlayer = player.transform.position - target[i].transform.position;
                 sforce += toPlayer.normalized / (toPlayer.magnitude);//거리가 길어질수록 힘이 적게 추가됨
-                 Debug.Log(sforce);
+                 //Debug.Log(sforce);
             }
         }
         return sforce;

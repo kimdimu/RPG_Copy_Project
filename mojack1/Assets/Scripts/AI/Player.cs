@@ -35,18 +35,21 @@ public class Player : MonoBehaviour
 
         if (Vector3.Distance(transform.position, target.transform.position) < 2.5f)
         {
+            Debug.Log("CohetionOff, dis < 2.5");
             steeringBehavior.CohetionOff();
         }
         else if (Vector3.Distance(transform.position, target.transform.position) < 5)
         {
+            Debug.Log("SeekOff, dis < 5");
             steeringBehavior.SeekOff();
-            //steeringBehavior.WanderOn();
+            steeringBehavior.WanderOn();
         }
         else
         {
+            Debug.Log("CohetionOn, SeekOn");
             steeringBehavior.CohetionOn();
             steeringBehavior.SeekOn();
-            //steeringBehavior.WanderOff();
+            steeringBehavior.WanderOff();
         }
 
 
