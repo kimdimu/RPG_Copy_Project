@@ -31,6 +31,7 @@ public class PlayerController : MonoBehaviour
     private List<Transform> enemiesInRange = new List<Transform>(); //enemies List in attack range
 
     [Header("Movement")]
+    Vector3 moveAmount;
     public float moveSpeed;
     public float velocity;
     public Rigidbody rb;
@@ -79,47 +80,78 @@ public class PlayerController : MonoBehaviour
             }
             Attack();
         }
-        if (Input.GetKey(KeyCode.A))
-            SetVelocity(-1);
-        if (Input.GetKeyUp(KeyCode.A))
-            SetVelocity(0);
-        if (Input.GetKey(KeyCode.D))
-            SetVelocity(1);
-        if (Input.GetKeyUp(KeyCode.D))
-            SetVelocity(0);
-        //if (Input.GetKey(KeyCode.W))
-        //    SetVelocity(1);
-        //if (Input.GetKeyUp(KeyCode.W))
-        //    SetVelocity(0);
-        //if (Input.GetKey(KeyCode.S))
+
+
+
+        //if (Input.GetKey(KeyCode.A))
         //    SetVelocity(-1);
-        //if (Input.GetKeyUp(KeyCode.S))
+        //if (Input.GetKeyUp(KeyCode.A))
         //    SetVelocity(0);
+        //if (Input.GetKey(KeyCode.D))
+        //    SetVelocity(1);
+        //if (Input.GetKeyUp(KeyCode.D))
+        //    SetVelocity(0);
+        ////if (Input.GetKey(KeyCode.W))
+        ////    SetVelocity(1);
+        ////if (Input.GetKeyUp(KeyCode.W))
+        ////    SetVelocity(0);
+        ////if (Input.GetKey(KeyCode.S))
+        ////    SetVelocity(-1);
+        ////if (Input.GetKeyUp(KeyCode.S))
+        ////    SetVelocity(0);
     }
     //-------------------------------------------------------------MOVE
     void Move()
     {
         if (canMove)
         {
-            if (velocity == 0)
+            moveAmount.z = 0;
+            moveAmount.x = 0;
+            SetVelocity(0);
+            transform.position += moveAmount.normalized;
+
+            if (Input.GetKey(KeyCode.A))
             {
-                anim.SetInteger("Condition", 0);
-                return;
+                SetVelocity(1);
+                moveAmount.x = -moveSpeed;
             }
-            else
+            if (Input.GetKey(KeyCode.D))
             {
-                anim.SetInteger("Condition", 1);
+                SetVelocity(2);
+                moveAmount.x = moveSpeed;
             }
-            rb.MovePosition(transform.position + Vector3.right * velocity * moveSpeed * Time.deltaTime);
+            if (Input.GetKey(KeyCode.W))
+            {
+                SetVelocity(3);
+                moveAmount.z = moveSpeed;
+            }
+            if (Input.GetKey(KeyCode.S))
+            {
+                SetVelocity(4);
+                moveAmount.z = -moveSpeed;
+            }
+            transform.position += moveAmount.normalized * moveSpeed * Time.deltaTime;
+
+
+            //rb.MovePosition(transform.position + Vector3.right * velocity * moveSpeed * Time.deltaTime);
         }
     }
     void SetVelocity(float dirx)
     {
-        if (dirx < 0) transform.LookAt(transform.position + Vector3.left);
-        if (dirx > 0) transform.LookAt(transform.position + Vector3.right);
-        //if (diry < 0) transform.LookAt(transform.position + Vector3.up);
-        // if (diry > 0) transform.LookAt(transform.position + Vector3.down);
+        if (dirx == 1) transform.LookAt(transform.position + Vector3.left);
+        if (dirx == 2) transform.LookAt(transform.position + Vector3.right);
+        if (dirx == 3) transform.LookAt(transform.position + Vector3.forward);
+        if (dirx == 4) transform.LookAt(transform.position + Vector3.back);
         velocity = dirx;//+diry);
+        if (velocity == 0)
+        {
+            anim.SetInteger("Condition", 0);
+            return;
+        }
+        else
+        {
+            anim.SetInteger("Condition", 1);
+        }
     }
     public void ChangeIsMove()
     {

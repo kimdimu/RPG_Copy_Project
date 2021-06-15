@@ -64,6 +64,11 @@
   <ItemGroup>
     <Compile Include="Assets\AShopExport\ShowAnimation.cs" />
     <Compile Include="Assets\AShopExport\UIObjRotation.cs" />
+    <Compile Include="Assets\Scripts\AI\MovingEntity.cs" />
+    <Compile Include="Assets\Scripts\AI\Player.cs" />
+    <Compile Include="Assets\Scripts\AI\PlayerMove.cs" />
+    <Compile Include="Assets\Scripts\AI\Stats.cs" />
+    <Compile Include="Assets\Scripts\AI\SteeringBehavior.cs" />
     <Compile Include="Assets\Scripts\Camera\FollowTarget.cs" />
     <Compile Include="Assets\Scripts\Character\EnemyController.cs" />
     <Compile Include="Assets\Scripts\Character\NPCController.cs" />

@@ -25,7 +25,7 @@ public class InputManager : MonoBehaviour
         if (Input.anyKeyDown)
         {
             KeyPressDown?.Invoke();
-            print("Input Key: " + Input.inputString);
+           // print("Input Key: " + Input.inputString);
         }
     }
 }

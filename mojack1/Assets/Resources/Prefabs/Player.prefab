@@ -47,12 +47,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   anim: {fileID: 6645499992580809609}
+  level: 1
+  levelText: {fileID: 0}
+  expbar: {fileID: 0}
+  incapacitatedTime: 0
+  dead: 0
+  totalHealth: 0
+  curHealth: 0
+  isAttack: 0
+  atkDamage: 6
+  attackSpeed: 1
+  weaponDmg: 0
+  bonusDmg: 0
   moveSpeed: 2
   velocity: 0
   rb: {fileID: 5822214590303146387}
-  attacking: 0
-  atkDamage: 6
-  attackSpeed: 1
+  strength: 0
 --- !u!54 &5822214590303146387
 Rigidbody:
   m_ObjectHideFlags: 0
