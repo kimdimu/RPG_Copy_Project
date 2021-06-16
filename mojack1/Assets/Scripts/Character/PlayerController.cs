@@ -60,7 +60,6 @@ public class PlayerController : MonoBehaviour
         if (incapacitatedTime > 0) return;
         GetInput();
         Move();
-        Debug.Log(transform.eulerAngles);
     }
     //-------------------------------------------------------------INPUT
     void GetInput()
@@ -81,25 +80,6 @@ public class PlayerController : MonoBehaviour
             }
             Attack();
         }
-
-
-
-        //if (Input.GetKey(KeyCode.A))
-        //    SetVelocity(-1);
-        //if (Input.GetKeyUp(KeyCode.A))
-        //    SetVelocity(0);
-        //if (Input.GetKey(KeyCode.D))
-        //    SetVelocity(1);
-        //if (Input.GetKeyUp(KeyCode.D))
-        //    SetVelocity(0);
-        ////if (Input.GetKey(KeyCode.W))
-        ////    SetVelocity(1);
-        ////if (Input.GetKeyUp(KeyCode.W))
-        ////    SetVelocity(0);
-        ////if (Input.GetKey(KeyCode.S))
-        ////    SetVelocity(-1);
-        ////if (Input.GetKeyUp(KeyCode.S))
-        ////    SetVelocity(0);
     }
     //-------------------------------------------------------------MOVE
     void Move()
@@ -165,6 +145,7 @@ public class PlayerController : MonoBehaviour
     void Attack()
     {
         if (isAttack) return;
+
         anim.speed = attackSpeed;
         anim.SetTrigger("Attack");
         StartCoroutine(AttackRoutine());
@@ -174,15 +155,18 @@ public class PlayerController : MonoBehaviour
     {
         atkDamage = GameLogic.CalculatePlayerBaseAttackDmg(this) + weaponDmg + bonusDmg;
     }
-    void DealDamage()
+    void DealDamage(GameObject who)
     {
-        Debug.Log("deal damage");
-        GetEnemiesInRange();
-        foreach (Transform enemy in enemiesInRange)
+        if (who == this.gameObject)
         {
-            EnemyController ec = enemy.GetComponent<EnemyController>();
-            if (ec == null) continue;
-            ec.getHit(atkDamage);
+            Debug.Log("deal damage");
+            GetEnemiesInRange();
+            foreach (Transform enemy in enemiesInRange)
+            {
+                EnemyController ec = enemy.GetComponent<EnemyController>();
+                if (ec == null) continue;
+                ec.getHit(atkDamage);
+            }
         }
     }
     IEnumerator AttackRoutine()

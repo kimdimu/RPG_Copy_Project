@@ -175,6 +175,7 @@ public class SteeringBehavior
     }
     Vector3 Wander()
     {
+        float difference;
         time -= Time.deltaTime;
         if (time < 0f)
         {
@@ -193,8 +194,12 @@ public class SteeringBehavior
             angleGoal = Mathf.Pow(Random.Range(0.0f, 90f), 2);
             time = 2;
         }
-
-        if (Mathf.Pow(player.transform.eulerAngles.y - playerAngle, 2) >= angleGoal)
+        difference = player.transform.eulerAngles.y - playerAngle;
+        if (difference > 180)
+        {
+            difference = 360 - difference;
+        }
+        if (Mathf.Pow(difference, 2) >= angleGoal)
         {
             return zero;
         }

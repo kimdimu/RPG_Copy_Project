@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class AnimationEvents : MonoBehaviour
 {
-    public delegate void AnimationEvent();
+    public delegate void AnimationEvent(GameObject me);
     //public static event AnimationEvent OnSlashAnimationHit;
     public static AnimationEvent OnSlashAnimationHit;
     //public static event EventHandler a;
     void OnExecuteSlashAniEvent()
     {
-        OnSlashAnimationHit();
+        OnSlashAnimationHit(this.transform.parent.gameObject);
     }
 
     public delegate void CanMoveEvent();

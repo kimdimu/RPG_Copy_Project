@@ -93,7 +93,7 @@ CapsuleCollider:
   m_Height: 1.9201493
   m_Direction: 1
   m_Center: {x: 0, y: 0.8037045, z: -0.2244525}
---- !u!114 &5822214590599459074
+--- !u!114 &597383481100379519
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
