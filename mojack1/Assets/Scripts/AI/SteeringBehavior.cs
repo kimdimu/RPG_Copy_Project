@@ -19,7 +19,7 @@ public class SteeringBehavior
     GameObject evader; // 적 기체
     Vector3 steeringF; //힘
     Vector3 zero; // 벡터 0,0,0
-    Vector3 target;
+    Vector3 target;//wwander
 
     float wanderRadius; //원의 반경
     float wanderDist; //원이 투사되는 거리. 원 중심과의 거리.
@@ -32,18 +32,21 @@ public class SteeringBehavior
     bool isReady; //공격준비상태인가?
     bool isAttack;//공격상태인가?
 
-    public SteeringBehavior(Player agent)//, Summing_method summing_Method, SteeringState steeringState)
+    public SteeringBehavior()//, Summing_method summing_Method, SteeringState steeringState)
     {
         OnState = new bool[(int)SteeringState.END];
         time = 0;
         wanderJitter = 0.5f;
         zero = new Vector3(0, 0, 0);
-        player = new Player();
         evader = new GameObject();
 
-        player = agent;
         summing_Method_ = Summing_method.none;
         steeringState1 = SteeringState.NONE;
+    }
+    public void SetTargetPlayer(Player Agent)
+    {
+        player = new Player();
+        player = Agent;
     }
     public void SetTargetAgent1(GameObject Agent) { evader = Agent; }
     public void SetWander(float rad, float dist, float jit)

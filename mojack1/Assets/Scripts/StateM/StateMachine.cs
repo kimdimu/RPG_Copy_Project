@@ -57,7 +57,7 @@ public class StateMachine<entity_type>
     }
     public void RevertToPreviousState()
     {
-        ChangeState(m_pGS);
+        ChangeState(m_pPS);
     }
 
     public State<entity_type> CurrentState() { return m_pCS; }

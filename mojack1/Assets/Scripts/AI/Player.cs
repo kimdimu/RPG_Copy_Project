@@ -4,7 +4,8 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     public MovingEntity movingEntity;
-    SteeringBehavior steeringBehavior;
+    public SteeringBehavior steeringBehavior;
+    public StateMachine<Player> stateMachine;
     public Stats stats;
 
     public Animator anim;
@@ -23,36 +24,25 @@ public class Player : MonoBehaviour
     {
         stats = new Stats();
         stats.HP=3;
-        steeringBehavior = new SteeringBehavior(this);
+
+        stateMachine = new StateMachine<Player>();
+        stateMachine.SetOwner(this);
+        stateMachine.SetCS(BackToPlayer.Instance); //왜 이 밑으로는 안가는거지..
+
+        steeringBehavior = new SteeringBehavior();
+        steeringBehavior.SetTargetPlayer(this);
         steeringBehavior.SeparationOn();
+
         movingEntity = new MovingEntity();
         steeringBehavior.SetTargetAgent1(target);
         steeringBehavior.SetWander(wanderRadius, wanderDist, wanderJitter);
     }
-
+    public StateMachine<Player> GetFSM() { return stateMachine; }
     void Update()
     {
         transform.LookAt(transform.position + movingEntity.m_vVelocity * Time.deltaTime * speed);
 
-        if (Vector3.Distance(transform.position, target.transform.position) < 2.5f)
-        {
-            Debug.Log("CohetionOff, dis < 2.5");
-            steeringBehavior.CohetionOff();
-        }
-        else if (Vector3.Distance(transform.position, target.transform.position) < 5)
-        {
-            Debug.Log("SeekOff, dis < 5");
-            steeringBehavior.SeekOff();
-            steeringBehavior.WanderOn();
-        }
-        else
-        {
-            Debug.Log("CohetionOn, SeekOn");
-            steeringBehavior.CohetionOn();
-            steeringBehavior.SeekOn();
-            steeringBehavior.WanderOff();
-        }
-
+        stateMachine.sUpdate();
 
         steeringForce = steeringBehavior.Calculate();
 
@@ -82,57 +72,53 @@ public class Player : MonoBehaviour
         }
         return enemiesInRange;
     }
-    void Attack()
-    {
-        if (isAttack) return;
+    //void Attack()
+    //{
+    //    if (isAttack) return;
 
-        anim.speed = attackSpeed;
-        anim.SetTrigger("Attack");
-        StartCoroutine(AttackRoutine());
-        //StartCoroutine(AttackCooldown());
-    }
-    void SetAttackDmg()
-    {
-        atkDamage = GameLogic.CalculatePlayerBaseAttackDmg(this) + weaponDmg + bonusDmg;
-    }
-    void DealDamage(GameObject who)
-    {
-        if (who == this.gameObject)
-        {
-            Debug.Log("deal damage");
-            GetEnemiesInRange();
-            foreach (Transform enemy in enemiesInRange)
-            {
-                EnemyController ec = enemy.GetComponent<EnemyController>();
-                if (ec == null) continue;
-                ec.getHit(atkDamage);
-            }
-        }
-    }
-    IEnumerator AttackRoutine()
-    {
-        isAttack = true;
-        yield return new WaitForSeconds(1);
-        isAttack = false;
-    }
-    IEnumerator AttackCooldown()
-    {
-        yield return new WaitForSeconds(1 / attackSpeed);
-    }
+    //    anim.speed = attackSpeed;
+    //    anim.SetTrigger("Attack");
+    //    StartCoroutine(AttackRoutine());
+    //    //StartCoroutine(AttackCooldown());
+    //}
+    //void SetAttackDmg()
+    //{
+    //    atkDamage = GameLogic.CalculatePlayerBaseAttackDmg(this) + weaponDmg + bonusDmg;
+    //}
+    //void DealDamage(GameObject who)
+    //{
+    //    if (who == this.gameObject)
+    //    {
+    //        Debug.Log("deal damage");
+    //        GetEnemiesInRange();
+    //        foreach (Transform enemy in enemiesInRange)
+    //        {
+    //            EnemyController ec = enemy.GetComponent<EnemyController>();
+    //            if (ec == null) continue;
+    //            ec.getHit(atkDamage);
+    //        }
+    //    }
+    //}
+    //IEnumerator AttackRoutine()
+    //{
+    //    isAttack = true;
+    //    yield return new WaitForSeconds(1);
+    //    isAttack = false;
+    //}
+    //IEnumerator AttackCooldown()
+    //{
+    //    yield return new WaitForSeconds(1 / attackSpeed);
+    //}
 
-    void GetEnemiesInRange()
-    {
-        enemiesInRange.Clear();
-        foreach (Collider c in Physics.OverlapSphere((transform.position + transform.forward * 1f), 1f))
-            if (c.gameObject.CompareTag("Enemy"))
-            {
-                enemiesInRange.Add(c.transform);
-            }
-    }
-    public void ChangeState(SteeringState steeringState)
-    {
-
-    }
+    //void GetEnemiesInRange()
+    //{
+    //    enemiesInRange.Clear();
+    //    foreach (Collider c in Physics.OverlapSphere((transform.position + transform.forward * 1f), 1f))
+    //        if (c.gameObject.CompareTag("Enemy"))
+    //        {
+    //            enemiesInRange.Add(c.transform);
+    //        }
+    //}
 
     private void OnTriggerEnter(Collider other)
     {

@@ -85,6 +85,8 @@
     <Compile Include="Assets\Scripts\Managers\Quest.cs" />
     <Compile Include="Assets\Scripts\Managers\QuestManager.cs" />
     <Compile Include="Assets\Scripts\Managers\UIController.cs" />
+    <Compile Include="Assets\Scripts\StateM\BackToPlayer.cs" />
+    <Compile Include="Assets\Scripts\StateM\LookAround.cs" />
     <Compile Include="Assets\Scripts\StateM\State.cs" />
     <Compile Include="Assets\Scripts\StateM\StateMachine.cs" />
     <None Include="Assets\Resources\Json files\00.txt" />
