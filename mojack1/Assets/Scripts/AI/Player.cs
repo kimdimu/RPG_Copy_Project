@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -10,6 +11,7 @@ public class Player : MonoBehaviour
 
     public Animator anim;
     public GameObject target;
+    public GameObject mainPlayer;
 
     Vector3 acceleration; // 가속도
     Vector3 steeringForce;// 힘
@@ -19,15 +21,32 @@ public class Player : MonoBehaviour
     public float wanderJitter;
 
     public float speed;//곱해줄 속도
+    public short alertState;
+    public short attackState;
+
+    [Header("Combat")]
+    public bool isAttack;
+    public float atkDamage;
+    public float attackSpeed;
+    public float weaponDmg;
+    public float bonusDmg;
+
+    private List<Transform> enemiesInRange = new List<Transform>(); //enemies List in attack range
 
     void Start()
     {
+        attackState = 0;
+        alertState = 0;
+        mainPlayer = target;
+        Alert.backUpTarget += BackUpTarget;
+        AttackEvents.HitEnemyEvent += GetTarget;
         stats = new Stats();
-        stats.HP=3;
+        stats.HP = 3;
 
         stateMachine = new StateMachine<Player>();
         stateMachine.SetOwner(this);
-        stateMachine.SetCS(BackToPlayer.Instance); //왜 이 밑으로는 안가는거지..
+        stateMachine.SetCS(Idle.Instance); //왜 이 밑으로는 안가는거지..
+        stateMachine.SetGS(GlobalState.Instance); //왜 이 밑으로는 안가는거지..
 
         steeringBehavior = new SteeringBehavior();
         steeringBehavior.SetTargetPlayer(this);
@@ -38,6 +57,8 @@ public class Player : MonoBehaviour
         steeringBehavior.SetWander(wanderRadius, wanderDist, wanderJitter);
     }
     public StateMachine<Player> GetFSM() { return stateMachine; }
+    public void GetTarget(GameObject g) { target = g; alertState = 1; }
+    public void BackUpTarget() { target = mainPlayer; }
     void Update()
     {
         transform.LookAt(transform.position + movingEntity.m_vVelocity * Time.deltaTime * speed);
@@ -72,60 +93,63 @@ public class Player : MonoBehaviour
         }
         return enemiesInRange;
     }
-    //void Attack()
-    //{
-    //    if (isAttack) return;
 
-    //    anim.speed = attackSpeed;
-    //    anim.SetTrigger("Attack");
-    //    StartCoroutine(AttackRoutine());
-    //    //StartCoroutine(AttackCooldown());
-    //}
-    //void SetAttackDmg()
-    //{
-    //    atkDamage = GameLogic.CalculatePlayerBaseAttackDmg(this) + weaponDmg + bonusDmg;
-    //}
-    //void DealDamage(GameObject who)
-    //{
-    //    if (who == this.gameObject)
-    //    {
-    //        Debug.Log("deal damage");
-    //        GetEnemiesInRange();
-    //        foreach (Transform enemy in enemiesInRange)
-    //        {
-    //            EnemyController ec = enemy.GetComponent<EnemyController>();
-    //            if (ec == null) continue;
-    //            ec.getHit(atkDamage);
-    //        }
-    //    }
-    //}
-    //IEnumerator AttackRoutine()
-    //{
-    //    isAttack = true;
-    //    yield return new WaitForSeconds(1);
-    //    isAttack = false;
-    //}
-    //IEnumerator AttackCooldown()
-    //{
-    //    yield return new WaitForSeconds(1 / attackSpeed);
-    //}
+    public void Attack()
+    {
+        if (isAttack) return;
+        Debug.Log("AttackEnemy");
 
-    //void GetEnemiesInRange()
-    //{
-    //    enemiesInRange.Clear();
-    //    foreach (Collider c in Physics.OverlapSphere((transform.position + transform.forward * 1f), 1f))
-    //        if (c.gameObject.CompareTag("Enemy"))
-    //        {
-    //            enemiesInRange.Add(c.transform);
-    //        }
-    //}
+        anim.speed = attackSpeed;
+        anim.SetTrigger("Attack");
+        DealDamage();
+        StartCoroutine(AttackRoutine());
+        StartCoroutine(AttackCooldown());
+    }
+    void DealDamage()
+    {
+        Debug.Log("deal damage");
+        GetEnemiesInRange();
+        if (enemiesInRange.Count == 0)
+        {
+            attackState = 0;
+            return;
+        }
+        foreach (Transform enemy in enemiesInRange)
+        {
+            EnemyController ec = enemy.GetComponent<EnemyController>();
+            if (ec == null) continue;
+            ec.getHit(atkDamage);
+        }
+    }
+    IEnumerator AttackRoutine()
+    {
+        isAttack = true;
+        yield return new WaitForSeconds(1);
+        isAttack = false;
+    }
+    IEnumerator AttackCooldown()
+    {
+        yield return new WaitForSeconds(1 / attackSpeed);
+    }
+
+    void GetEnemiesInRange()
+    {
+        enemiesInRange.Clear();
+        foreach (Collider c in Physics.OverlapSphere((transform.position + transform.forward * 1f), 2f))
+            if (c.gameObject.CompareTag("Enemy"))
+            {
+                enemiesInRange.Add(c.transform);
+            }
+    }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Enemy"))
         {
-            Debug.Log("AIATTACK");
-            anim.SetTrigger("Attack");
+            //Debug.Log("AIATTACK");
+            //anim.SetTrigger("Attack");
+            //target = other.gameObject;
+            attackState = 1;
         }
     }
 }

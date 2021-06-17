@@ -62,13 +62,13 @@ public class EnemyController : MonoBehaviour
         anim.SetTrigger("GetHit");
         anim.SetInteger("Condition", 100);
         curHealth -= dmg;
-        //Debug.Log(curHealth);
-
-        if(curHealth<=0)
+        AttackEvents.HitEnemyEvent(this.gameObject);
+        if (curHealth<=0)
         {
             Die();
             return;
         }
+        //때려서 죽었다면 이벤트 X
 
         StartCoroutine(RecoverFromHit());
     }
@@ -84,12 +84,14 @@ public class EnemyController : MonoBehaviour
             PlayerData.monstersKilled.Add(monsterID, new PlayerData.MonsterKills());
         PlayerData.monstersKilled[monsterID].amount+=5; //죽인 양 증가
 
+        Alert.backUpTarget();
+
         dead = true;
         DropLoot();
 
         foreach(GameObject go in players)
         {
-            Debug.Log("foreach");
+            //Debug.Log("foreach");
             go.GetComponent<PlayerController>().SetExp(expGranted / players.Length);
         }
 

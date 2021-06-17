@@ -11,10 +11,8 @@ public enum Summing_method { none, weighted_average, prioritized, dithered };
 
 public class SteeringBehavior
 {
-    bool[] OnState;
+    private bool[] OnState;
     Summing_method summing_Method_;
-    SteeringState steeringState1;
-    SteeringState steeringState2;
     Player player; // 나
     GameObject evader; // 적 기체
     Vector3 steeringF; //힘
@@ -41,7 +39,6 @@ public class SteeringBehavior
         evader = new GameObject();
 
         summing_Method_ = Summing_method.none;
-        steeringState1 = SteeringState.NONE;
     }
     public void SetTargetPlayer(Player Agent)
     {
@@ -182,7 +179,7 @@ public class SteeringBehavior
         time -= Time.deltaTime;
         if (time < 0f)
         {
-            Debug.Log("초기화~ 단번에 늒껴");
+            //Debug.Log("초기화~ 단번에 늒껴");
 
             wanderTarget = zero; //초기화
                                  //소량의 무작위 벡터를 목표물 위치에 더한다.

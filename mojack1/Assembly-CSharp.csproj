@@ -68,6 +68,14 @@
     <Compile Include="Assets\Scripts\AI\MovingEntity.cs" />
     <Compile Include="Assets\Scripts\AI\Player.cs" />
     <Compile Include="Assets\Scripts\AI\PlayerMove.cs" />
+    <Compile Include="Assets\Scripts\AI\StateM\Alert.cs" />
+    <Compile Include="Assets\Scripts\AI\StateM\AttackEnemy.cs" />
+    <Compile Include="Assets\Scripts\AI\StateM\BackToPlayer.cs" />
+    <Compile Include="Assets\Scripts\AI\StateM\GlobalState.cs" />
+    <Compile Include="Assets\Scripts\AI\StateM\Idle.cs" />
+    <Compile Include="Assets\Scripts\AI\StateM\LookAround.cs" />
+    <Compile Include="Assets\Scripts\AI\StateM\State.cs" />
+    <Compile Include="Assets\Scripts\AI\StateM\StateMachine.cs" />
     <Compile Include="Assets\Scripts\AI\Stats.cs" />
     <Compile Include="Assets\Scripts\AI\SteeringBehavior.cs" />
     <Compile Include="Assets\Scripts\Camera\FollowTarget.cs" />
@@ -79,16 +87,13 @@
     <Compile Include="Assets\Scripts\Database\NPCDatabase.cs" />
     <Compile Include="Assets\Scripts\Database\PlayerData.cs" />
     <Compile Include="Assets\Scripts\Event\AnimationEvents.cs" />
+    <Compile Include="Assets\Scripts\Event\AttackEvents.cs" />
     <Compile Include="Assets\Scripts\Managers\DialogueManager.cs" />
     <Compile Include="Assets\Scripts\Managers\GameLogic.cs" />
     <Compile Include="Assets\Scripts\Managers\InputManager.cs" />
     <Compile Include="Assets\Scripts\Managers\Quest.cs" />
     <Compile Include="Assets\Scripts\Managers\QuestManager.cs" />
     <Compile Include="Assets\Scripts\Managers\UIController.cs" />
-    <Compile Include="Assets\Scripts\StateM\BackToPlayer.cs" />
-    <Compile Include="Assets\Scripts\StateM\LookAround.cs" />
-    <Compile Include="Assets\Scripts\StateM\State.cs" />
-    <Compile Include="Assets\Scripts\StateM\StateMachine.cs" />
     <None Include="Assets\Resources\Json files\00.txt" />
     <Reference Include="UnityEngine">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.4.11f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
