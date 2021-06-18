@@ -30,20 +30,18 @@ public class Alert : State<Player>
             instance = value;
         }
     }
-    GameObject prevTarget;
 
     public override void Enter(Player player)
     {
+        Debug.Log("Enter Alert");
         player.alertState = 2;
         time = 0;
-        prevTarget = player.target;
         player.steeringBehavior.SeekOn();
     }
     public override void Execute(Player player)
     {
         time += Time.deltaTime;
-        Debug.Log("Alert");
-        if (time >= 0.5f || player.target == player.mainPlayer)
+        if (time >= 0.8f || player.target == player.mainPlayer)
         {
             player.GetFSM().ChangeState(BackToPlayer.Instance);
         }

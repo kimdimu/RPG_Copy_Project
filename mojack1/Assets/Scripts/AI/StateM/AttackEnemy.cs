@@ -26,17 +26,19 @@ public class AttackEnemy : State<Player>
 
     public override void Enter(Player player)
     {
+        Debug.Log("Enter Attack");
         player.attackState = 2;
         //player.steeringBehavior.AttackmoveOn();
     }
     public override void Execute(Player player)
     {
-        player.Attack();
         if (Vector3.Distance(player.transform.position, player.mainPlayer.transform.position) >= 5
             ||player.attackState ==0)
         {
             player.GetFSM().ChangeState(BackToPlayer.Instance);
+            return;
         }
+        player.Attack();
     }
     public override void Exit(Player player)
     {

@@ -25,11 +25,11 @@ public class LookAround : State<Player>
 
     public override void Enter(Player player)
     {
+            Debug.Log("Enter LOOKAROUND");
         player.steeringBehavior.WanderOn();
     }
     public override void Execute(Player player)
     {
-            Debug.Log("LOOKAROUND");
         if (Vector3.Distance(player.transform.position, player.target.transform.position) >= 5)
         {
             player.GetFSM().ChangeState(BackToPlayer.Instance);

@@ -7,6 +7,7 @@ public class EnemyController : MonoBehaviour
     [Header("Ani")]
     public Animator anim;
     public GameObject hitParticle;
+    public CapsuleCollider cap;
     public float hitParticleTime = 0.2f;
 
     [Header("Stats")]
@@ -15,7 +16,7 @@ public class EnemyController : MonoBehaviour
     public float totalHealth;
     public float curHealth;
     public float expGranted;
-    bool dead;
+    public bool dead;
 
     [Header("Movement")]
     public float moveSpeed;
@@ -34,6 +35,7 @@ public class EnemyController : MonoBehaviour
 
     void Start()
     {
+        cap = GetComponent<CapsuleCollider>();
         players = GameObject.FindGameObjectsWithTag("Player");
         curHealth = totalHealth;
 
@@ -63,6 +65,8 @@ public class EnemyController : MonoBehaviour
         anim.SetInteger("Condition", 100);
         curHealth -= dmg;
         AttackEvents.HitEnemyEvent(this.gameObject);
+        Debug.Log("-3");
+
         if (curHealth<=0)
         {
             Die();
@@ -87,6 +91,7 @@ public class EnemyController : MonoBehaviour
         Alert.backUpTarget();
 
         dead = true;
+        cap.enabled=false;
         DropLoot();
 
         foreach(GameObject go in players)
@@ -101,7 +106,7 @@ public class EnemyController : MonoBehaviour
 
     void DropLoot()
     {
-        print("You Get the bounty");
+        //print("You Get the bounty");
     }
 
     IEnumerator RecoverFromHit()

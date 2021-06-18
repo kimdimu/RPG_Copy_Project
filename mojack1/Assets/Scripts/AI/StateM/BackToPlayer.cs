@@ -25,12 +25,12 @@ public class BackToPlayer : State<Player>
 
     public override void Enter(Player player)
     {
+        Debug.Log("Enter BACKTOPLAYER");
         player.steeringBehavior.SeekOn();
     }
     public override void Execute(Player player)
     {
         player.steeringBehavior.SeekOn();
-        Debug.Log("BACKTOPLAYER");
         if (Vector3.Distance(player.transform.position, player.target.transform.position) < 5)
         {
             player.GetFSM().ChangeState(LookAround.Instance);

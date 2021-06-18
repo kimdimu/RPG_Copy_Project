@@ -45,8 +45,8 @@ public class Player : MonoBehaviour
 
         stateMachine = new StateMachine<Player>();
         stateMachine.SetOwner(this);
-        stateMachine.SetCS(Idle.Instance); //왜 이 밑으로는 안가는거지..
-        stateMachine.SetGS(GlobalState.Instance); //왜 이 밑으로는 안가는거지..
+        stateMachine.SetCS(Idle.Instance); 
+        stateMachine.SetGS(GlobalState.Instance); 
 
         steeringBehavior = new SteeringBehavior();
         steeringBehavior.SetTargetPlayer(this);
@@ -57,7 +57,14 @@ public class Player : MonoBehaviour
         steeringBehavior.SetWander(wanderRadius, wanderDist, wanderJitter);
     }
     public StateMachine<Player> GetFSM() { return stateMachine; }
-    public void GetTarget(GameObject g) { target = g; alertState = 1; }
+    public void GetTarget(GameObject g)
+    {
+        if (target == mainPlayer)
+        {
+            target = g;
+            alertState = 1;
+        }
+    }
     public void BackUpTarget() { target = mainPlayer; }
     void Update()
     {
@@ -99,7 +106,8 @@ public class Player : MonoBehaviour
         if (isAttack) return;
         Debug.Log("AttackEnemy");
 
-        anim.speed = attackSpeed;
+        anim.speed = attackSpeed*2;
+
         anim.SetTrigger("Attack");
         DealDamage();
         StartCoroutine(AttackRoutine());
@@ -107,18 +115,29 @@ public class Player : MonoBehaviour
     }
     void DealDamage()
     {
-        Debug.Log("deal damage");
         GetEnemiesInRange();
-        if (enemiesInRange.Count == 0)
-        {
-            attackState = 0;
-            return;
-        }
+        //if (enemiesInRange.Count == 0)
+        //{
+        //    attackState = 0;
+        //    return;
+        //}
+        bool check = true;
         foreach (Transform enemy in enemiesInRange)
         {
             EnemyController ec = enemy.GetComponent<EnemyController>();
             if (ec == null) continue;
-            ec.getHit(atkDamage);
+            if(!enemy.GetComponent<EnemyController>().dead)
+                ec.getHit(atkDamage);
+            if(check == true)
+                check = enemy.GetComponent<EnemyController>().dead;
+        }
+        if(check == true )
+        {
+            attackState = 0;
+            anim.speed = attackSpeed ;
+
+            Debug.Log("check == true ... all death ...attackState");
+
         }
     }
     IEnumerator AttackRoutine()
