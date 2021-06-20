@@ -38,6 +38,6 @@ public class Quest
     {
         public int id;//몬스터의 종류
         public int amount;//죽일 몬스터의 개체 수
-        public int initialAmount;//??
+        public int initialAmount;//퀘스트 시작 시 저장할 몬스터 수
     }
 }

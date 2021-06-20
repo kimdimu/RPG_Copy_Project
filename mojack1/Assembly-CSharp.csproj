@@ -78,6 +78,10 @@
     <Compile Include="Assets\Scripts\AI\StateM\StateMachine.cs" />
     <Compile Include="Assets\Scripts\AI\Stats.cs" />
     <Compile Include="Assets\Scripts\AI\SteeringBehavior.cs" />
+    <Compile Include="Assets\Scripts\Build\BuildManager.cs" />
+    <Compile Include="Assets\Scripts\Build\GridGetNear.cs" />
+    <Compile Include="Assets\Scripts\Build\GridMouse.cs" />
+    <Compile Include="Assets\Scripts\Build\ReturnFab.cs" />
     <Compile Include="Assets\Scripts\Camera\FollowTarget.cs" />
     <Compile Include="Assets\Scripts\Character\EnemyController.cs" />
     <Compile Include="Assets\Scripts\Character\NPCController.cs" />

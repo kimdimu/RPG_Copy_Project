@@ -64,7 +64,7 @@ public class EnemyController : MonoBehaviour
         anim.SetTrigger("GetHit");
         anim.SetInteger("Condition", 100);
         curHealth -= dmg;
-        AttackEvents.HitEnemyEvent(this.gameObject);
+        //AttackEvents.HitEnemyEvent(this.gameObject);
         Debug.Log("-3");
 
         if (curHealth<=0)
@@ -86,9 +86,9 @@ public class EnemyController : MonoBehaviour
         //데이터에 해당 몬스터의 아이디가 없다? 추가.
         if (!PlayerData.monstersKilled.ContainsKey(monsterID))
             PlayerData.monstersKilled.Add(monsterID, new PlayerData.MonsterKills());
-        PlayerData.monstersKilled[monsterID].amount+=5; //죽인 양 증가
+        PlayerData.monstersKilled[monsterID].amount++; //죽인 양 증가
 
-        Alert.backUpTarget();
+        //Alert.backUpTarget();
 
         dead = true;
         cap.enabled=false;

@@ -134,7 +134,7 @@ public class PlayerController : MonoBehaviour
             anim.SetInteger("Condition", 1);
         }
     }
-    public void ChangeIsMove()
+    public void ChangeIsMove() //빌드 상태가 아니며 움직일 수 있다면 
     {
         if (canMove)
             canMove = false;

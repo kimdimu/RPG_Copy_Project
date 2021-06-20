@@ -12,6 +12,8 @@ public class UIController : MonoBehaviour
     public Transform questInfo;
     public Transform questInfoContent;
 
+    public GameObject buildButtons;
+
     public Button questInfoAcceptButton;
     public Button questInfoCancelButton;
     public Button questInfoCompleteButton;
@@ -35,6 +37,8 @@ public class UIController : MonoBehaviour
         questBook = canvas.Find("QuestGrid");
         questBookContent = questBook.Find("Background/Info/Viewport/Content");
         questBookCancelButton = questBook.Find("Background/Buttons/Cancel").GetComponent<Button>();
+
+        buildButtons = canvas.Find("BuildButtons").gameObject;
     }
 
 }

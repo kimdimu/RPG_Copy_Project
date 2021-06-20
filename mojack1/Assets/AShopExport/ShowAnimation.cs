@@ -66,7 +66,7 @@ public class ShowAnimation : MonoBehaviour {
 	
 	void AddAnim () 
 	{
-		clips = AnimationUtility.GetAnimationClips(AinObjs[i]);
+		//clips = AnimationUtility.GetAnimationClips(AinObjs[i]);
 	}
 	void PlayAnim ()
 	{

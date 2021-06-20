@@ -42,7 +42,7 @@ public class NPCController : MonoBehaviour
                     UIController.instance.questInfoCompleteButton.gameObject.SetActive(true);
                     UIController.instance.questInfoCompleteButton.onClick.AddListener(() =>
                     {
-                    ReceiveConpleteQuest(QuestManager.instance.questDictionary[quests[i]]);
+                    ReceiveCompleteQuest(QuestManager.instance.questDictionary[quests[i]]);
                     PlayerData.activeQuests.Remove(i);//활성화에서 빼고
                     PlayerData.finishedQuests.Add(i); //끝낸 목록에 보낸다.
                     UIController.instance.questInfoCompleteButton.onClick.RemoveAllListeners();//버튼 이벤트 삭제한다.
@@ -57,7 +57,7 @@ public class NPCController : MonoBehaviour
                 break;
         }
     }
-    void ReceiveConpleteQuest(Quest quest)
+    void ReceiveCompleteQuest(Quest quest)
     {
         if (quest.reward.exp > 0) PlayerController.main.SetExp(quest.reward.exp);
         if(quest.reward.items.Length>0)
