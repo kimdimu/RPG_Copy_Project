@@ -5,7 +5,7 @@ using UnityEngine;
 //상태 이넘!
 public enum SteeringState
 {
-    NONE, SEEK, FLEE, ARRIVE, PURSUIT, EVADE, WANDER, ATTACKMOVE, COHESION, SEPARATION, END
+    NONE, SEEK, FLEE, ARRIVE, PURSUIT, EVADE, WANDER, ATTACKMOVE, COHESION, SEPARATION, HIDEBACK,END
 }
 public enum Summing_method { none, weighted_average, prioritized, dithered };
 
@@ -13,7 +13,7 @@ public class SteeringBehavior
 {
     private bool[] OnState;
     Summing_method summing_Method_;
-    Player player; // 나
+    Player playerAI; // 나
     GameObject evader; // 적 기체
     Vector3 steeringF; //힘
     Vector3 zero; // 벡터 0,0,0
@@ -42,8 +42,8 @@ public class SteeringBehavior
     }
     public void SetTargetPlayer(Player Agent)
     {
-        player = new Player();
-        player = Agent;
+        playerAI = new Player();
+        playerAI = Agent;
     }
     public void SetTargetAgent1(GameObject Agent) { evader = Agent; }
     public void SetWander(float rad, float dist, float jit)
@@ -65,6 +65,7 @@ public class SteeringBehavior
     public void SeparationOn() { OnState[(int)SteeringState.SEPARATION] = true; }
     public void CohetionOn() { OnState[(int)SteeringState.COHESION] = true; }
     public void AttackmoveOn() { OnState[(int)SteeringState.ATTACKMOVE] = true; }
+    public void HideBackOn() { OnState[(int)SteeringState.HIDEBACK] = true; }
     public void FleeOff() { OnState[(int)SteeringState.FLEE] = false; }
     public void SeekOff() { OnState[(int)SteeringState.SEEK] = false; }
     public void PursuitOff() { OnState[(int)SteeringState.PURSUIT] = false; }
@@ -74,6 +75,7 @@ public class SteeringBehavior
     public void SeparationOff() { OnState[(int)SteeringState.SEPARATION] = false; }
     public void CohetionOff() { OnState[(int)SteeringState.COHESION] = false; }
     public void AttackmoveOff() { OnState[(int)SteeringState.ATTACKMOVE] = false; }
+    public void HideBackOff() { OnState[(int)SteeringState.HIDEBACK] = false; }
     #endregion
 
     public Vector3 Calculate()
@@ -85,23 +87,25 @@ public class SteeringBehavior
             case Summing_method.none:
                 {
                     if (On(SteeringState.SEEK))
-                        steeringF += Seek(player.target.transform.position);
+                        steeringF += Seek(playerAI.target.transform.position);
                     if (On(SteeringState.FLEE))
-                        steeringF += Flee(player.target.transform.position);
+                        steeringF += Flee(playerAI.target.transform.position);
                     if (On(SteeringState.ARRIVE))
-                        steeringF += Arrive(player.target.transform.position, 2);
+                        steeringF += Arrive(playerAI.target.transform.position, 2);
                     if (On(SteeringState.PURSUIT))
-                        steeringF += Pursuit(player.target.GetComponent<Player>());
+                        steeringF += Pursuit(playerAI.target.GetComponent<Player>());
                     if (On(SteeringState.EVADE))
-                        steeringF += Evade(player.target.GetComponent<Player>());
+                        steeringF += Evade(playerAI.target.GetComponent<Player>());
                     if (On(SteeringState.WANDER))
                         steeringF += Wander();
                     if (On(SteeringState.ATTACKMOVE))
-                        steeringF += AttackMove(player.target);
+                        steeringF += AttackMove(playerAI.target);
                     if (On(SteeringState.COHESION))
-                        steeringF += Cohesion(player.GetTargets(10f));
+                        steeringF += Cohesion(playerAI.GetTargets(10f));
                     if (On(SteeringState.SEPARATION))
-                        steeringF += Separation(player.GetTargets(1f));
+                        steeringF += Separation(playerAI.GetTargets(1f));
+                    if (On(SteeringState.HIDEBACK))
+                        steeringF += HideBack(playerAI.mainPlayer.GetComponent<PlayerController>().GetEnemiesInRange());
                 }
                 break;
             case Summing_method.prioritized:
@@ -117,21 +121,21 @@ public class SteeringBehavior
 
     Vector3 Seek(Vector3 targetPos)
     {
-        Vector3 playerVelo = (targetPos - player.transform.position).normalized;
+        Vector3 playerVelo = (targetPos - playerAI.transform.position).normalized;
 
         //속도 리턴. 정규화된 방향 
         return playerVelo;
     }
     Vector3 Flee(Vector3 targetPos)
     {
-        Vector3 playerVelo = (player.transform.position - targetPos).normalized;
+        Vector3 playerVelo = (playerAI.transform.position - targetPos).normalized;
 
         //속도 리턴
         return playerVelo;
     }
     Vector3 Arrive(Vector3 targetPos, float deceleration)
     {
-        Vector3 Totarget = (targetPos - player.transform.position);
+        Vector3 Totarget = (targetPos - playerAI.transform.position);
 
         float dist = Totarget.magnitude;
 
@@ -155,22 +159,22 @@ public class SteeringBehavior
     Vector3 Pursuit(Player evader)
     {
         //도피자를 향한 벡터
-        Vector3 toEv = evader.transform.position - player.transform.position;
+        Vector3 toEv = evader.transform.position - playerAI.transform.position;
         //상대적인 앞위치? 플레이어 방향과 도피자 방향의 내적값.
-        float RelativeHeading = Vector3.Dot(player.transform.forward, evader.transform.forward);
+        float RelativeHeading = Vector3.Dot(playerAI.transform.forward, evader.transform.forward);
         //도피자로 가는 벡터와 플레이어방향의 내적이 0보다 크다. 자신 앞에 있다면.
         //두 방향의 내적값이 0.95보다 작다.
-        if (Vector3.Dot(toEv, player.transform.forward) > 0 && RelativeHeading < -0.95f)
+        if (Vector3.Dot(toEv, playerAI.transform.forward) > 0 && RelativeHeading < -0.95f)
         {
             return Seek(evader.transform.position);
         }
-        float LookAheadTime = toEv.magnitude / (player.movingEntity.m_dMaxSpeed + evader.speed);
+        float LookAheadTime = toEv.magnitude / (playerAI.movingEntity.m_dMaxSpeed + evader.speed);
         return Seek(evader.transform.position + evader.movingEntity.m_vVelocity * LookAheadTime);
     }
     Vector3 Evade(Player pursuer)
     {
-        Vector3 toPs = pursuer.transform.position - player.transform.position;
-        float LookAheadTime = toPs.magnitude / (player.movingEntity.m_dMaxSpeed + pursuer.speed);
+        Vector3 toPs = pursuer.transform.position - playerAI.transform.position;
+        float LookAheadTime = toPs.magnitude / (playerAI.movingEntity.m_dMaxSpeed + pursuer.speed);
         return Flee(pursuer.transform.position + pursuer.movingEntity.m_vVelocity * LookAheadTime);
     }
     Vector3 Wander()
@@ -189,12 +193,12 @@ public class SteeringBehavior
             wanderTarget.Normalize();
             wanderTarget *= wanderRadius;
 
-            playerAngle = player.transform.eulerAngles.y;
-             // Debug.Log(playerAngle);
+            playerAngle = playerAI.transform.eulerAngles.y;
+            // Debug.Log(playerAngle);
             angleGoal = Mathf.Pow(Random.Range(0.0f, 90f), 2);
             time = 2;
         }
-        difference = player.transform.eulerAngles.y - playerAngle;
+        difference = playerAI.transform.eulerAngles.y - playerAngle;
         if (difference > 180)
         {
             difference = 360 - difference;
@@ -203,13 +207,13 @@ public class SteeringBehavior
         {
             return zero;
         }
-        
+
         //반지름에 맞춘 위치에 현재 보고있는 방향 * 투사 거리만큼 더해준다. + 현재 위치 더해서 월드 좌표로 옮기기
-        target.x = wanderTarget.x + player.transform.position.x+ player.transform.forward.x * wanderDist;
-        target.y = player.transform.position.y;
-        target.z = wanderTarget.z + player.transform.position.z + player.transform.forward.z * wanderDist;
+        target.x = wanderTarget.x + playerAI.transform.position.x + playerAI.transform.forward.x * wanderDist;
+        target.y = playerAI.transform.position.y;
+        target.z = wanderTarget.z + playerAI.transform.position.z + playerAI.transform.forward.z * wanderDist;
         //그 쪽으로 간다.
-        Vector3 Velo= (target - player.transform.position).normalized;
+        Vector3 Velo = (target - playerAI.transform.position).normalized;
         return Velo;
     }
     Vector3 AttackMove(GameObject target)
@@ -234,7 +238,7 @@ public class SteeringBehavior
                 isAttack = false;
                 time = 0;
             }
-            Vector3 jumppower = target.transform.position - player.transform.position;
+            Vector3 jumppower = target.transform.position - playerAI.transform.position;
             jumppower.Normalize();
             jumppower *= 10; //빠른 속도로 전진한다.
 
@@ -243,7 +247,7 @@ public class SteeringBehavior
         else
         {
             //거리가 10보다 작다면
-            if (Vector3.Distance(target.transform.position, player.transform.position) < 10)
+            if (Vector3.Distance(target.transform.position, playerAI.transform.position) < 10)
             {
                 isReady = true; // 공격 준비 상태로 전환
                 return zero; // 0 움직이지 않는다.
@@ -267,7 +271,7 @@ public class SteeringBehavior
 
         for (int i = 0; i < target.Count; ++i)
         {
-            if (target[i].gameObject.CompareTag("Player") && target[i] != player.gameObject)
+            if (target[i].gameObject.CompareTag("Player") && target[i] != playerAI.gameObject)
             {
                 mass += target[i].transform.position;
                 ++targetsCount;
@@ -278,7 +282,7 @@ public class SteeringBehavior
             //mass /= targetsCount;
             //sforce = Seek(mass);
             mass /= targetsCount;
-            Vector3 toTarget = mass - player.transform.position;
+            Vector3 toTarget = mass - playerAI.transform.position;
             sforce += toTarget.normalized / (toTarget.magnitude);//거리가 길어질수록 힘이 적게 추가됨
             //sforce = Seek(mass);
         }
@@ -290,14 +294,34 @@ public class SteeringBehavior
         Vector3 sforce = new Vector3();
         for (int i = 0; i < target.Count; ++i)
         {
-            if (target[i].gameObject.CompareTag("Player") && target[i] != player.gameObject)
+            if (target[i].gameObject.CompareTag("Player") && target[i] != playerAI.gameObject)
             {
                 //타겟(다른놈)이 플레이어에게 가는 방향. 즉 도망침
-                Vector3 toPlayer = player.transform.position - target[i].transform.position;
+                Vector3 toPlayer = playerAI.transform.position - target[i].transform.position;
                 sforce += toPlayer.normalized / (toPlayer.magnitude);//거리가 길어질수록 힘이 적게 추가됨
-                 //Debug.Log(sforce);
+                                                                     //Debug.Log(sforce);
             }
         }
         return sforce;
+    }
+
+    Vector3 HideBack(List<Transform> target)//인자로 장애물의 위치를 받는다.
+    {
+        float DistToClosest = 100000;
+        float DistanceFromBoundary = 1;
+        float DistAway = 1 + DistanceFromBoundary; // 5 = 플레이어 둘레 + 플레이어와 떨어질 거리
+        Vector3 ToTarget = zero;
+        int count = 0;
+        for (int i = 0; i < target.Count; ++i)
+        {
+            ToTarget += (playerAI.mainPlayer.transform.position - target[i].position).normalized;
+            count++;
+        }
+        Debug.Log(count);
+        if (count == 0)
+            return zero;
+        Vector3 hidingSpot = (ToTarget.normalized) * DistAway + playerAI.mainPlayer.transform.position ;
+            Debug.Log(hidingSpot);
+        return Arrive(hidingSpot, 1);
     }
 }

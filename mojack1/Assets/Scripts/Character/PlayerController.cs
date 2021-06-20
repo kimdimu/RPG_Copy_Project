@@ -14,6 +14,8 @@ public class PlayerController : MonoBehaviour
     public Text levelText;
     public float Experience { get; private set; } // property. set is private. we can use set only in this class(instance)
     public Transform expbar;
+    public Transform hpbar;
+    public Transform spbar;
 
     [Header("Health")]
     public float incapacitatedTime; //피격 후 무력화 시간 
@@ -28,7 +30,8 @@ public class PlayerController : MonoBehaviour
     public float weaponDmg;
     public float bonusDmg;
     
-    private List<Transform> enemiesInRange = new List<Transform>(); //enemies List in attack range
+    private List<Transform> enemiesInRangeAttack = new List<Transform>(); //enemies List in attack range
+    private List<Transform> enemiesInRange_ = new List<Transform>(); //enemies List in attack range
 
     [Header("Movement")]
     Vector3 moveAmount;
@@ -49,8 +52,10 @@ public class PlayerController : MonoBehaviour
         AnimationEvents.OnOffMove += ChangeIsMove;
         curHealth = totalHealth;
         expbar = UIController.instance.canvas.Find("Background/Exp");
-        expbar = UIController.instance.canvas.Find("Background/Exp");
+        hpbar = UIController.instance.canvas.Find("Background/Health");
         levelText = UIController.instance.canvas.Find("Background/LvText").GetComponent<Text>();
+        hpbar.Find("Fill_bar").GetComponent<Image>().fillAmount = curHealth / totalHealth;
+        hpbar.Find("Text").GetComponent<Text>().text = "HP " + curHealth + "/" + totalHealth;
         SetExp(0);
         SetAttackDmg();
     }
@@ -160,8 +165,8 @@ public class PlayerController : MonoBehaviour
         if (who == this.gameObject)
         {
             Debug.Log("deal damage");
-            GetEnemiesInRange();
-            foreach (Transform enemy in enemiesInRange)
+            GetEnemiesInRangeForAttack();
+            foreach (Transform enemy in enemiesInRangeAttack)
             {
                 EnemyController ec = enemy.GetComponent<EnemyController>();
                 if (ec == null) continue;
@@ -179,14 +184,25 @@ public class PlayerController : MonoBehaviour
     {
         yield return new WaitForSeconds(1/attackSpeed);
     }
-    void GetEnemiesInRange()
+    public void GetEnemiesInRangeForAttack()
     {
-        enemiesInRange.Clear();
+        enemiesInRangeAttack.Clear();
         foreach (Collider c in Physics.OverlapSphere((transform.position + transform.forward * 1f), 1f))
             if(c.gameObject.CompareTag("Enemy"))
             {
-                enemiesInRange.Add(c.transform);
+                enemiesInRangeAttack.Add(c.transform);
             }
+    }
+
+    public List<Transform> GetEnemiesInRange()
+    {
+        enemiesInRange_.Clear();
+        foreach (Collider c in Physics.OverlapSphere(transform.position, 10f))
+            if (c.gameObject.CompareTag("Enemy"))
+            {
+                enemiesInRange_.Add(c.transform);
+            }
+        return enemiesInRange_;
     }
     //-------------------------------------------------------------GETHIT
     public void GetHit(float dmg)
@@ -195,9 +211,14 @@ public class PlayerController : MonoBehaviour
         anim.SetTrigger("GetHit");
         curHealth -= dmg;
 
+        hpbar.Find("Fill_bar").GetComponent<Image>().fillAmount = curHealth / totalHealth;
+        hpbar.Find("Text").GetComponent<Text>().text = "HP " + curHealth + "/" + totalHealth;
+
+
         if (curHealth <= 0)
         {
             Die();
+            canMove = false;
             return;
         }
 

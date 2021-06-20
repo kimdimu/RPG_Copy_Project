@@ -23,6 +23,7 @@ public class Player : MonoBehaviour
     public float speed;//곱해줄 속도
     public short alertState;
     public short attackState;
+    public short hideState;
 
     [Header("Combat")]
     public bool isAttack;
@@ -37,11 +38,12 @@ public class Player : MonoBehaviour
     {
         attackState = 0;
         alertState = 0;
+        hideState = 0;
         mainPlayer = target;
         Alert.backUpTarget += BackUpTarget;
         AttackEvents.HitEnemyEvent += GetTarget;
         stats = new Stats();
-        stats.HP = 3;
+        stats.HP = 15;
 
         stateMachine = new StateMachine<Player>();
         stateMachine.SetOwner(this);
