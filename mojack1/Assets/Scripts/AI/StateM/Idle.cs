@@ -25,16 +25,17 @@ public class Idle : State<Player>
 
     public override void Enter(Player player)
     {
+        Debug.Log("Enter Idle");
     }
     public override void Execute(Player player)
     {
         if (Vector3.Distance(player.transform.position, player.target.transform.position) >= 5)
         {
-            player.GetFSM().ChangeState(BackToPlayer.Instance);
+            ///player.GetFSM().ChangeState(BackToPlayer.Instance);
         }
         else
         {
-            player.GetFSM().ChangeState(LookAround.Instance);
+            //player.GetFSM().ChangeState(LookAround.Instance);
         }
     }
     public override void Exit(Player player)

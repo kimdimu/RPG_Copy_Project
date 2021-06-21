@@ -33,9 +33,9 @@ public class AttackEnemy : State<Player>
     public override void Execute(Player player)
     {
         if (Vector3.Distance(player.transform.position, player.mainPlayer.transform.position) >= 5
-            ||player.attackState ==0)
+            ||player.GetEnemiesInRange().Count<=0)
         {
-            player.GetFSM().ChangeState(BackToPlayer.Instance);
+            player.GetFSM().ChangeState(Idle.Instance);
             return;
         }
         player.Attack();

@@ -170,7 +170,7 @@ public class PlayerController : MonoBehaviour
             {
                 EnemyController ec = enemy.GetComponent<EnemyController>();
                 if (ec == null) continue;
-                ec.getHit(atkDamage);
+                ec.getHit(atkDamage, this.gameObject);
             }
         }
     }
@@ -184,14 +184,17 @@ public class PlayerController : MonoBehaviour
     {
         yield return new WaitForSeconds(1/attackSpeed);
     }
-    public void GetEnemiesInRangeForAttack()
+    public List<Transform> GetEnemiesInRangeForAttack()
     {
         enemiesInRangeAttack.Clear();
         foreach (Collider c in Physics.OverlapSphere((transform.position + transform.forward * 1f), 1f))
-            if(c.gameObject.CompareTag("Enemy"))
+        {
+            if (c.gameObject.CompareTag("Enemy"))
             {
                 enemiesInRangeAttack.Add(c.transform);
             }
+        }
+        return enemiesInRangeAttack;
     }
 
     public List<Transform> GetEnemiesInRange()

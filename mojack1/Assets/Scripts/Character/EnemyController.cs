@@ -57,14 +57,15 @@ public class EnemyController : MonoBehaviour
     void Update()
     {
     }
-    public void getHit(float dmg)
+    public void getHit(float dmg, GameObject obj)
     {
         if (dead) return;
 
         anim.SetTrigger("GetHit");
         anim.SetInteger("Condition", 100);
         curHealth -= dmg;
-        AttackEvents.HitEnemyEvent(this.gameObject);
+        if(obj.CompareTag("Player"))
+            AttackEvents.HitEnemyEvent(this.gameObject);
         Debug.Log("-3");
 
         if (curHealth<=0)

@@ -30,14 +30,15 @@ public class GlobalState : State<Player>
     {
         //if (Vector3.Distance(player.transform.position, player.target.transform.position) > 15)
         if (player.attackState == 1)
-        {
             player.GetFSM().ChangeState(AttackEnemy.Instance);
-        }
-        else if(player.hideState == 0 && player.stats.HP <=20 && player.mainPlayer.GetComponent<PlayerController>().curHealth>80)
-        {
-            player.GetFSM().ChangeState(HideBack.Instance);
 
-        }
+        else if(player.interposeState == 0 && player.mainPlayer.GetComponent<PlayerController>().curHealth < 50 &&
+            player.mainPlayer.GetComponent<PlayerController>().GetEnemiesInRange().Count>0)
+            player.GetFSM2().ChangeState(Interpose.Instance);
+
+        else if(player.hideState == 0 && player.stats.HP <=20 && player.mainPlayer.GetComponent<PlayerController>().curHealth>80)
+            player.GetFSM2().ChangeState(HideBack.Instance);
+
         else if (player.alertState == 1 && player.attackState == 0)
             player.GetFSM().ChangeState(Alert.Instance);
     }

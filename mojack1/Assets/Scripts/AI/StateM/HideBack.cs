@@ -34,7 +34,7 @@ public class HideBack : State<Player>
 
         if(player.stats.HP>20)
         {
-            player.GetFSM().ChangeState(LookAround.Instance);
+            player.GetFSM().ChangeState(NoneState.Instance);
         }
     }
     public override void Exit(Player player)

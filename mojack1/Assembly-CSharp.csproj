@@ -64,6 +64,7 @@
   <ItemGroup>
     <Compile Include="Assets\AShopExport\ShowAnimation.cs" />
     <Compile Include="Assets\AShopExport\UIObjRotation.cs" />
+    <Compile Include="Assets\Local.cs" />
     <Compile Include="Assets\Scripts\AI\CanSee.cs" />
     <Compile Include="Assets\Scripts\AI\MovingEntity.cs" />
     <Compile Include="Assets\Scripts\AI\Player.cs" />
@@ -72,8 +73,11 @@
     <Compile Include="Assets\Scripts\AI\StateM\AttackEnemy.cs" />
     <Compile Include="Assets\Scripts\AI\StateM\BackToPlayer.cs" />
     <Compile Include="Assets\Scripts\AI\StateM\GlobalState.cs" />
+    <Compile Include="Assets\Scripts\AI\StateM\HideBack.cs" />
     <Compile Include="Assets\Scripts\AI\StateM\Idle.cs" />
+    <Compile Include="Assets\Scripts\AI\StateM\Interpose.cs" />
     <Compile Include="Assets\Scripts\AI\StateM\LookAround.cs" />
+    <Compile Include="Assets\Scripts\AI\StateM\NoneState.cs" />
     <Compile Include="Assets\Scripts\AI\StateM\State.cs" />
     <Compile Include="Assets\Scripts\AI\StateM\StateMachine.cs" />
     <Compile Include="Assets\Scripts\AI\Stats.cs" />

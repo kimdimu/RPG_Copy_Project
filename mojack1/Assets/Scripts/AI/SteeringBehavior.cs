@@ -5,7 +5,7 @@ using UnityEngine;
 //상태 이넘!
 public enum SteeringState
 {
-    NONE, SEEK, FLEE, ARRIVE, PURSUIT, EVADE, WANDER, ATTACKMOVE, COHESION, SEPARATION, HIDEBACK,END
+    NONE, SEEK, FLEE, ARRIVE, PURSUIT, EVADE, WANDER, ATTACKMOVE, COHESION, SEPARATION, HIDEBACK, INTERPOS, END
 }
 public enum Summing_method { none, weighted_average, prioritized, dithered };
 
@@ -66,6 +66,7 @@ public class SteeringBehavior
     public void CohetionOn() { OnState[(int)SteeringState.COHESION] = true; }
     public void AttackmoveOn() { OnState[(int)SteeringState.ATTACKMOVE] = true; }
     public void HideBackOn() { OnState[(int)SteeringState.HIDEBACK] = true; }
+    public void InterposeOn() { OnState[(int)SteeringState.INTERPOS] = true; }
     public void FleeOff() { OnState[(int)SteeringState.FLEE] = false; }
     public void SeekOff() { OnState[(int)SteeringState.SEEK] = false; }
     public void PursuitOff() { OnState[(int)SteeringState.PURSUIT] = false; }
@@ -76,6 +77,7 @@ public class SteeringBehavior
     public void CohetionOff() { OnState[(int)SteeringState.COHESION] = false; }
     public void AttackmoveOff() { OnState[(int)SteeringState.ATTACKMOVE] = false; }
     public void HideBackOff() { OnState[(int)SteeringState.HIDEBACK] = false; }
+    public void InterposeOff() { OnState[(int)SteeringState.INTERPOS] = false; }
     #endregion
 
     public Vector3 Calculate()
@@ -106,6 +108,8 @@ public class SteeringBehavior
                         steeringF += Separation(playerAI.GetTargets(1f));
                     if (On(SteeringState.HIDEBACK))
                         steeringF += HideBack(playerAI.mainPlayer.GetComponent<PlayerController>().GetEnemiesInRange());
+                    if (On(SteeringState.INTERPOS))
+                        steeringF += Interpose(playerAI.mainPlayer.GetComponent<PlayerController>().GetEnemiesInRange());
                 }
                 break;
             case Summing_method.prioritized:
@@ -323,5 +327,26 @@ public class SteeringBehavior
         Vector3 hidingSpot = (ToTarget.normalized) * DistAway + playerAI.mainPlayer.transform.position ;
             Debug.Log(hidingSpot);
         return Arrive(hidingSpot, 1);
+    }
+
+    //호출할 때 가까운 적이 존재 할때만 호출해야 할듯..
+    Vector3 Interpose(List<Transform> target)
+    {
+        Vector3 midPoint = zero; //가장 가까운 적과 메인플레이어의 위치.
+        Vector3 nearest = zero; //가장 가까운 적의 위치를 담는다.
+        int count = 0;
+        for (int i = 0; i < target.Count; ++i)
+        {
+            if (Vector3.Distance(target[i].position, playerAI.mainPlayer.transform.position)< Vector3.Distance(nearest, playerAI.mainPlayer.transform.position))
+            {
+                nearest = target[i].position;
+                ++count;
+            }
+        }
+        midPoint = (nearest + playerAI.mainPlayer.transform.position) /2;
+        if (count==0)
+            return zero;
+
+        return Arrive(midPoint,1);
     }
 }
