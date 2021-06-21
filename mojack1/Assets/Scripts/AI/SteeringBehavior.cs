@@ -311,7 +311,6 @@ public class SteeringBehavior
 
     Vector3 HideBack(List<Transform> target)//인자로 장애물의 위치를 받는다.
     {
-        float DistToClosest = 100000;
         float DistanceFromBoundary = 1;
         float DistAway = 1 + DistanceFromBoundary; // 5 = 플레이어 둘레 + 플레이어와 떨어질 거리
         Vector3 ToTarget = zero;

@@ -79,7 +79,14 @@ public class Player : MonoBehaviour
     public void BackUpTarget() { target = mainPlayer; }
     void Update()
     {
-        //Debug.Log(transform.forward);
+        if(Input.GetKeyDown(KeyCode.U))
+        {
+            stats.HP += 10;
+        }
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            stats.HP -= 10;
+        }
         foreach (GameObject go in GetTargets(5f))
         {
             if (go.CompareTag("Enemy"))
@@ -187,11 +194,6 @@ public class Player : MonoBehaviour
     void DealDamage()
     {
         GetEnemiesInRange();
-        //if (enemiesInRange.Count == 0)
-        //{
-        //    attackState = 0;
-        //    return;
-        //}
         bool check = true;
         foreach (Transform enemy in enemiesInRange)
         {
@@ -232,16 +234,5 @@ public class Player : MonoBehaviour
                 enemiesInRange.Add(c.transform);
             }
         return enemiesInRange;
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Enemy"))
-        {
-            //Debug.Log("AIATTACK");
-            //anim.SetTrigger("Attack");
-            //target = other.gameObject;
-            attackState = 1;
-        }
     }
 }

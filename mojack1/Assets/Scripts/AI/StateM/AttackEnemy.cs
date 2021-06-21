@@ -35,7 +35,7 @@ public class AttackEnemy : State<Player>
         if (Vector3.Distance(player.transform.position, player.mainPlayer.transform.position) >= 5
             ||player.GetEnemiesInRange().Count<=0)
         {
-            player.GetFSM().ChangeState(Idle.Instance);
+            player.GetFSM().ChangeState(BackToPlayer.Instance);
             return;
         }
         player.Attack();
